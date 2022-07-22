@@ -6,6 +6,8 @@ import helmet from 'helmet';
 import rateLimiter from 'express-rate-limit';
 import cors from 'cors';
 import {handleError} from "./utils/handleErrors";
+import {uploadRouter} from "./routes/upload-file";
+import fileUpload = require("express-fileupload");
 
 
 const app = express();
@@ -15,6 +17,8 @@ dotenv.config({path: '.env'});
 app.use(express.json());
 
 app.use(helmet());
+
+app.use(fileUpload());
 
 app.use(cors({
     origin: "http//:localhost/3000",
@@ -31,7 +35,7 @@ app.use(morgan('common'));
 
 
 //routes
-
+app.use('/', uploadRouter);
 
 app.use(handleError);
 
