@@ -1,1 +1,1 @@
-export * from './exampleType';
+export * from './user';
