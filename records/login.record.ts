@@ -2,12 +2,13 @@ import 'dotenv/config';
 import { pool } from '../utils/db';
 import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
-import { Login } from '../types';
+import { Login, LoginCreated } from '../types';
+import jwt from 'jsonwebtoken';
 
 type LoginResults = [Login[], FieldPacket[]];
 
 export class LoginRecord implements Login {
-  id: string;
+  id?: string;
   user_id: string;
   refreshToken: string;
 
@@ -28,5 +29,17 @@ export class LoginRecord implements Login {
 
   static async deleteOneByToken(refreshToken: string): Promise<void> {
     await pool.execute('DELETE FROM `login` WHERE `refreshToken` = :refreshToken', refreshToken);
+  }
+
+  static createTokens(payload: string): LoginCreated {
+    const token = jwt.sign({ id: payload }, process.env.ACCESS_TOKEN_KEY, {
+      expiresIn: '10min',
+    });
+    const refreshToken = jwt.sign({ id: payload }, process.env.ACCESS_REFRESH_TOKEN_KEY, { expiresIn: '24h' });
+    return {
+      id: payload,
+      token,
+      refreshToken,
+    };
   }
 }
