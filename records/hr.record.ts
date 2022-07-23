@@ -14,29 +14,29 @@ export class UserRecord implements HrEntity {
   maxReservedStudents: number;
 
   constructor(obj: HrEntity) {
-    if (typeof !obj.email || obj.email.length > 127) {
-      throw new ValidationError('Email nie może być pusty, ani przekraczać 127 znaków.');
+    if (typeof !obj.email || obj.email.length > 255) {
+      throw new ValidationError('Email cannot be empty and cannot exceed 255 characters.');
     }
     if (typeof obj.email !== 'string') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
+      throw new ValidationError('The format of the entered data is incorrect.');
     }
     if (typeof !obj.fullName || obj.fullName.length > 50) {
-      throw new ValidationError('Nazwa nie może być pusta, ani przekraczać 50 znaków.');
+      throw new ValidationError('Full name cannot be empty and cannot exceed 50 characters.');
     }
     if (typeof obj.fullName !== 'string') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
+      throw new ValidationError('The format of the entered data is incorrect.');
     }
     if (typeof !obj.company || obj.company.length > 120) {
-      throw new ValidationError('Nazwa firmy nie może być pusta, ani przekraczać 120 znaków.');
+      throw new ValidationError('Company name cannot be empty and cannot exceed 120 characters.');
     }
     if (typeof obj.company !== 'string') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
+      throw new ValidationError('The format of the entered data is incorrect.');
     }
     if (typeof !obj.maxReservedStudents || obj.maxReservedStudents > 999) {
-      throw new ValidationError('Liczba zarezerwowanych kursantów nie może być pusta, ani większa niż 999.');
+      throw new ValidationError('Number of reserved students cannot be empty and cannot exceed 999.');
     }
     if (typeof obj.maxReservedStudents !== 'number') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
+      throw new ValidationError('The format of the entered data is incorrect.');
     }
 
     this.id = obj.id;
