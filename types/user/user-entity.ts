@@ -1,9 +1,7 @@
 export interface UserEntity {
-  id: string;
+  user_id?: string;
   email: string;
-  courseCompletion: number;
-  courseEngagment: number;
-  projectDegree: number;
-  teamProjectDegree: number;
-  bonusProjectUrls: string;
+  password: string | null;
+  role: string;
+  registerToken?: string | null;
 }

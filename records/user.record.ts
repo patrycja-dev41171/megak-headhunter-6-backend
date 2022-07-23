@@ -1,83 +1,55 @@
-import { UserEntity } from '../types';
 import { ValidationError } from '../utils/handleErrors';
 import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
 import { pool } from '../utils/db';
+import { UserEntity } from '../types';
 
-type UserRecordResult = [UserEntity[], FieldPacket[]];
+type UserRecordResults = [UserEntity[], FieldPacket[]];
 
 export class UserRecord implements UserEntity {
-  id: string;
+  user_id?: string;
   email: string;
-  courseCompletion: number;
-  courseEngagment: number;
-  projectDegree: number;
-  teamProjectDegree: number;
-  bonusProjectUrls: string;
+  password: string | null;
+  role: string;
+  registerToken?: string | null;
 
   constructor(obj: UserEntity) {
-    if (typeof !obj.email || obj.email.length > 127) {
-      throw new ValidationError('Email nie może być pusty, ani przekraczać 127 znaków');
+    if (!obj.email || obj.email.length > 255) {
+      throw new ValidationError('Email cannot be empty and cannot exceed 255 characters.');
     }
     if (typeof obj.email !== 'string') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
+      throw new ValidationError('The format of the entered data is incorrect.');
     }
-    if (typeof !obj.courseCompletion) {
-      throw new ValidationError('Pole wymagane');
+    if (!obj.role) {
+      throw new ValidationError('Role cannot be empty.');
     }
-    if (typeof obj.courseCompletion !== 'number') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
-    }
-    if (typeof !obj.courseEngagment) {
-      throw new ValidationError('Pole wymagane');
-    }
-    if (typeof obj.courseEngagment !== 'number') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
-    }
-    if (typeof !obj.projectDegree) {
-      throw new ValidationError('Pole wymagane');
-    }
-    if (typeof obj.projectDegree !== 'number') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
-    }
-    if (typeof !obj.teamProjectDegree) {
-      throw new ValidationError('Pole wymagane');
-    }
-    if (typeof obj.teamProjectDegree !== 'number') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
-    }
-    if (typeof !obj.bonusProjectUrls) {
-      throw new ValidationError('Pole wymagane');
-    }
-    if (typeof obj.bonusProjectUrls !== 'string') {
-      throw new ValidationError('Format wprowadzonych danych jest błędny.');
+    if (!obj.password || obj.password.length > 255) {
+      throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
     }
 
-    this.id = obj.id;
+    this.user_id = obj.user_id ?? uuid();
     this.email = obj.email;
-    this.courseCompletion = obj.courseCompletion;
-    this.courseEngagment = obj.courseEngagment;
-    this.projectDegree = obj.projectDegree;
-    this.teamProjectDegree = obj.teamProjectDegree;
-    this.bonusProjectUrls = obj.bonusProjectUrls;
+    this.password = obj.password ?? null;
+    this.role = obj.role;
+    this.registerToken = obj.registerToken ?? null;
   }
 
   async insert(): Promise<void> {
-    if (!this.id) {
-      this.id = uuid();
-    }
-
-    const [results] = (await pool.execute(
-      'INSERT INTO `users` (`id`, `email`, `courseCompletion`, `courseEngagment`, `projectDegree`, `teamProjectDegree`, `bonusProjectUrls`) VALUES (:id, ,:email :courseCompletion, :courseEngagment, :projectDegree, :teamProjectDegree, :bonusProjectUrls)',
+    const registerToken = uuid();
+    await pool.execute(
+      'INSERT INTO `users` (`user_id`, `email`, `password`,' +
+        ' `role`,`registerToken`)VALUES(:user_id,:email, :password, :role, :registerToken)',
       {
-        id: this.id,
-        email: this.email,
-        courseCompletion: this.courseCompletion,
-        courseEngagment: this.courseEngagment,
-        projectDegree: this.projectDegree,
-        teamProjectDegree: this.teamProjectDegree,
-        bonusProjectUrls: this.bonusProjectUrls,
+        ...this,
+        registerToken: registerToken,
       }
-    )) as UserRecordResult;
+    );
+  }
+
+  static async getOneByEmail(email: string): Promise<UserEntity> {
+    const [results] = (await pool.execute('SELECT * FROM `user` WHERE `email` = :email', {
+      email,
+    })) as UserRecordResults;
+    return results.length === 0 ? null : new UserRecord(results[0]);
   }
 }
