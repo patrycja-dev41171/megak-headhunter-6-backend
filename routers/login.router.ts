@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { UserRecord } from '../records/user.record';
 import { ValidationError } from '../utils/handleErrors';
 import { LoginRecord } from '../records/login.record';
+import { isPasswordCorrect } from '../utils/bcrypt-functions';
 
 export const loginRouter = Router()
   .post('/', async (req, res) => {
@@ -11,21 +12,17 @@ export const loginRouter = Router()
       throw new ValidationError('There is no user with this e-mail.');
     }
     if (user.registerToken !== null) {
-      // console.log('yes')
       throw new ValidationError('User in the database but has not been registered.');
     }
     if (req.cookies.refreshToken !== undefined && (await LoginRecord.getOneByToken(req.cookies.refreshToken))) {
       throw new ValidationError('User is already logged in.');
     }
 
-    try {
-      //DODANIE BCRYPT - SPRAWDZANIE HASŁA
-      if (user.password === 'admin') {
-        console.log('hasło poprawne');
-      }
-    } catch (err) {
-      throw new ValidationError('Incorrect password.');
+    const isCorrect = isPasswordCorrect(password, user.password);
+    if (!isCorrect) {
+      throw new ValidationError('Password incorrect.');
     }
+
     try {
       const response = await LoginRecord.createTokens(user.user_id);
       const loginRecord = new LoginRecord({
