@@ -3,7 +3,7 @@ import { ValidationError } from '../utils/handleErrors';
 
 export const uploadRouter = Router();
 
-uploadRouter.post('/upload', async (req, res) => {
+uploadRouter.post('/', async (req, res) => {
   if (!req.files) {
     throw new ValidationError('Nie przesłano pliku !');
   }

@@ -7,10 +7,10 @@ import rateLimiter from 'express-rate-limit';
 import cors from 'cors';
 import { handleError } from './utils/handleErrors';
 import { uploadRouter } from './routers/upload-file';
-import fileUpload = require('express-fileupload');
 import { loginRouter } from './routers/login.router';
 import cookieParser from 'cookie-parser';
 import { refreshTokenRouter } from './routers/refreshToken.router';
+import fileUpload = require('express-fileupload');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(fileUpload());
 
 app.use(
   cors({
-    origin: 'http//:localhost/3000',
+    origin: 'http://localhost:3000',
   })
 );
 
@@ -40,12 +40,13 @@ app.use(
 app.use(morgan('common'));
 
 //routers
-app.use('/', uploadRouter);
+
+app.use('/upload', uploadRouter);
 app.use('/login', loginRouter);
 app.use('/refresh-token', refreshTokenRouter);
 
 app.use(handleError);
 
 app.listen(8080, 'localhost', () => {
-  console.log(`server is running: http//:localhost:8080`);
+  console.log(`server is running: http://localhost:8080`);
 });
