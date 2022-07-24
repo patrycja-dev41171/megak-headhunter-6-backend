@@ -6,7 +6,7 @@ import { pool } from '../utils/db';
 
 type HrRecordResult = [HrEntity[], FieldPacket[]];
 
-export class UserRecord implements HrEntity {
+export class HrRecord implements HrEntity {
   id: string;
   email: string;
   fullName: string;

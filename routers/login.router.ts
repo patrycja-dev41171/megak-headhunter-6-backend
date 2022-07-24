@@ -7,18 +7,14 @@ export const loginRouter = Router()
   .post('/', async (req, res) => {
     const { email, password } = req.body;
     const user = await UserRecord.getOneByEmail(email);
-
     if (!user) {
       throw new ValidationError('There is no user with this e-mail.');
     }
     if (user.registerToken !== null) {
+      // console.log('yes')
       throw new ValidationError('User in the database but has not been registered.');
     }
-    if (req.cookies.refreshToken !== undefined) {
-      throw new ValidationError('User is already logged in.');
-    }
-    const isLoggedIn = await LoginRecord.getOneByToken(req.cookies.refreshToken);
-    if (isLoggedIn !== null) {
+    if (req.cookies.refreshToken !== undefined && (await LoginRecord.getOneByToken(req.cookies.refreshToken))) {
       throw new ValidationError('User is already logged in.');
     }
 

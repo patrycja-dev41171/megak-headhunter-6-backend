@@ -23,7 +23,9 @@ export class LoginRecord implements Login {
   }
 
   static async getOneByToken(refreshToken: string): Promise<Login> {
-    const [results] = (await pool.execute('SELECT * FROM `login` WHERE`refreshToken` =:refreshToken', refreshToken)) as LoginResults;
+    const [results] = (await pool.execute('SELECT * FROM `login` WHERE `refreshToken` = :refreshToken', {
+      refreshToken,
+    })) as LoginResults;
     return results.length === 0 ? null : results[0];
   }
 

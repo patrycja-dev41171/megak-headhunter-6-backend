@@ -10,6 +10,7 @@ import { uploadRouter } from './routers/upload-file';
 import fileUpload = require('express-fileupload');
 import { loginRouter } from './routers/login.router';
 import cookieParser from 'cookie-parser';
+import { refreshTokenRouter } from './routers/refreshToken.router';
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(helmet());
 
 app.use(cookieParser());
-// app.use(fileUpload());
+app.use(fileUpload());
 
 app.use(
   cors({
@@ -41,6 +42,7 @@ app.use(morgan('common'));
 //routers
 app.use('/', uploadRouter);
 app.use('/login', loginRouter);
+app.use('/refresh-token', refreshTokenRouter);
 
 app.use(handleError);
 
