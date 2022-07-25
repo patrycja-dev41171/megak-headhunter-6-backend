@@ -29,7 +29,7 @@ export const refreshTokenRouter = Router().get('/', async (req, res) => {
       const accessToken = jwt.sign({ id: result.user_id }, process.env.ACCESS_TOKEN_KEY, { expiresIn: '10min' });
       res.json({
         accessToken: accessToken,
-        id: user.user_id,
+        id: user.id,
       });
     } catch (err) {
       throw new ValidationError('Error refreshing tokens.');

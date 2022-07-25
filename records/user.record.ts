@@ -7,7 +7,7 @@ import { UserEntity } from '../types';
 type UserRecordResults = [UserEntity[], FieldPacket[]];
 
 export class UserRecord implements UserEntity {
-  user_id?: string;
+  id?: string;
   email: string;
   password: string | null;
   role: string;
@@ -27,7 +27,7 @@ export class UserRecord implements UserEntity {
       throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
     }
 
-    this.user_id = obj.user_id ?? uuid();
+    this.id = obj.id ?? uuid();
     this.email = obj.email;
     this.password = obj.password ?? null;
     this.role = obj.role;
@@ -37,8 +37,7 @@ export class UserRecord implements UserEntity {
   async insert(): Promise<void> {
     const registerToken = uuid();
     await pool.execute(
-      'INSERT INTO `users` (`user_id`, `email`, `password`,' +
-        ' `role`,`registerToken`)VALUES(:user_id,:email, :password, :role, :registerToken)',
+      'INSERT INTO `users` (`id`, `email`, `password`,' + ' `role`,`registerToken`)VALUES(:id,:email, :password, :role, :registerToken)',
       {
         ...this,
         registerToken: registerToken,
@@ -53,9 +52,9 @@ export class UserRecord implements UserEntity {
     return results.length === 0 ? null : new UserRecord(results[0]);
   }
 
-  static async getOneById(user_id: string): Promise<UserEntity> {
-    const [results] = (await pool.execute('SELECT * FROM `user` WHERE `user_id` = :user_id', {
-      user_id,
+  static async getOneById(id: string): Promise<UserEntity> {
+    const [results] = (await pool.execute('SELECT * FROM `user` WHERE `id` = :id', {
+      id,
     })) as UserRecordResults;
     return results.length === 0 ? null : new UserRecord(results[0]);
   }
