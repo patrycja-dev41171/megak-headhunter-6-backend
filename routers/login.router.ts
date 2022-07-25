@@ -47,6 +47,9 @@ export const loginRouter = Router()
 
   .delete('/', async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new ValidationError('User cannot be logged off.');
+    }
     try {
       await LoginRecord.getOneByToken(refreshToken);
       await LoginRecord.deleteOneByToken(refreshToken);

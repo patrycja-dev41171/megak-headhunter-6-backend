@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
 import { Login, LoginCreated } from '../types';
 import jwt from 'jsonwebtoken';
+import { ValidationError } from '../utils/handleErrors';
 
 type LoginResults = [Login[], FieldPacket[]];
 
@@ -13,6 +14,19 @@ export class LoginRecord implements Login {
   refreshToken: string;
 
   constructor(obj: Login) {
+    if (!obj.user_id) {
+      throw new ValidationError('User_id cannot be empty.');
+    }
+    if (typeof obj.user_id !== 'string') {
+      throw new ValidationError('User_id must be string.');
+    }
+    if (!obj.refreshToken) {
+      throw new ValidationError('RefreshToken cannot be empty.');
+    }
+    if (typeof obj.refreshToken !== 'string') {
+      throw new ValidationError('RefreshToken must be string.');
+    }
+
     this.id = obj.id ?? uuid();
     this.user_id = obj.user_id;
     this.refreshToken = obj.refreshToken;
@@ -30,7 +44,9 @@ export class LoginRecord implements Login {
   }
 
   static async deleteOneByToken(refreshToken: string): Promise<void> {
-    await pool.execute('DELETE FROM `login` WHERE `refreshToken` = :refreshToken', refreshToken);
+    await pool.execute('DELETE FROM `login` WHERE `refreshToken` = :refreshToken', {
+      refreshToken: refreshToken,
+    });
   }
 
   static createTokens(payload: string): LoginCreated {
