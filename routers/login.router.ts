@@ -24,9 +24,9 @@ export const loginRouter = Router()
     }
 
     try {
-      const response = await LoginRecord.createTokens(user.user_id);
+      const response = await LoginRecord.createTokens(user.id);
       const loginRecord = new LoginRecord({
-        user_id: user.user_id,
+        user_id: user.id,
         refreshToken: response.refreshToken,
       });
       await loginRecord.insert();
@@ -36,7 +36,7 @@ export const loginRouter = Router()
           maxAge: 24 * 60 * 60 * 1000,
         })
         .json({
-          id: response.id,
+          id: user.id,
           accessToken: response.token,
           role: user.role,
         });
@@ -47,6 +47,9 @@ export const loginRouter = Router()
 
   .delete('/', async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new ValidationError('User cannot be logged off.');
+    }
     try {
       await LoginRecord.getOneByToken(refreshToken);
       await LoginRecord.deleteOneByToken(refreshToken);
