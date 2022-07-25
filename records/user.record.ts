@@ -37,7 +37,7 @@ export class UserRecord implements UserEntity {
   async insert(): Promise<void> {
     const registerToken = uuid();
     await pool.execute(
-      'INSERT INTO `users` (`id`, `email`, `password`,' + ' `role`,`registerToken`)VALUES(:id,:email, :password, :role, :registerToken)',
+      'INSERT INTO `user` (`id`, `email`, `password`,' + ' `role`,`registerToken`)VALUES(:id,:email, :password, :role, :registerToken)',
       {
         ...this,
         registerToken: registerToken,
