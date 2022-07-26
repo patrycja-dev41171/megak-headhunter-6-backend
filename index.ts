@@ -10,6 +10,7 @@ import { uploadRouter } from './routers/upload-file';
 import { loginRouter } from './routers/login.router';
 import cookieParser from 'cookie-parser';
 import { refreshTokenRouter } from './routers/refreshToken.router';
+import { hrRouter } from './routers/hr.router';
 import fileUpload = require('express-fileupload');
 
 const app = express();
@@ -26,7 +27,7 @@ app.use(fileUpload());
 app.use(
   cors({
     origin: 'http://localhost:3000',
-      credentials: true,
+    credentials: true,
   })
 );
 
@@ -42,7 +43,8 @@ app.use(morgan('common'));
 
 //routers
 
-app.use('/upload', uploadRouter);
+app.use('/admin/upload/students', uploadRouter);
+app.use('/admin/add-hr', hrRouter);
 app.use('/login', loginRouter);
 app.use('/refresh-token', refreshTokenRouter);
 
