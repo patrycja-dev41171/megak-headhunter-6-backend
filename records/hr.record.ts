@@ -64,4 +64,11 @@ export class HrRecord implements HrEntity {
       console.log(err);
     }
   }
+
+  static async getOneByEmail(email: string): Promise<HrEntity> {
+    const [results] = (await pool.execute('SELECT * FROM `user` WHERE `email` = :email', {
+      email,
+    })) as HrRecordResult;
+    return results.length === 0 ? null : new HrRecord(results[0]);
+  }
 }
