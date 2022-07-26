@@ -5,4 +5,5 @@ export interface HrEntity {
   fullName: string;
   company: string;
   maxReservedStudents: number;
+  users_id_list?: string[] | [];
 }

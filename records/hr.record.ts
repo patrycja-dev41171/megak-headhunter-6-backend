@@ -13,6 +13,7 @@ export class HrRecord implements HrEntity {
   fullName: string;
   company: string;
   maxReservedStudents: number;
+  users_id_list?: string[] | [];
 
   constructor(obj: HrEntity) {
     if (!obj.user_id) {
@@ -45,17 +46,22 @@ export class HrRecord implements HrEntity {
 
     this.id = obj.id ?? uuid();
     this.user_id = obj.user_id;
-    this.email = obj.email;
     this.fullName = obj.fullName;
+    this.email = obj.email;
     this.company = obj.company;
     this.maxReservedStudents = obj.maxReservedStudents;
+    this.users_id_list = obj.users_id_list ?? [];
   }
 
   async insert(): Promise<void> {
-    await pool.execute(
-      'INSERT INTO `hr` (`id`, `user_id`, `email`, `fullName`, `company`, `maxReservedStudents`)' +
-        ' VALUES (:id, :user_id ,:email :fullName, :company, :maxReservedStudents)',
-      this
-    );
+    try {
+      await pool.execute(
+        'INSERT INTO `hr` (`id`, `user_id`,`fullName`,`email`, `company`, `maxReservedStudents`, `users_id_list`)' +
+          ' VALUES (:id, :user_id , :fullName, :email, :company, :maxReservedStudents, :users_id_list)',
+        this
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

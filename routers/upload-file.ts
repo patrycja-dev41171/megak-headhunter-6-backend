@@ -25,6 +25,7 @@ uploadRouter.post('/', async (req, res) => {
       return el;
     }
   });
+  console.log(parseData);
 
   // Do zrobienia: dodawanie do bazy danych oraz walidacja uzytkownikow podczas dodawania.
 

@@ -9,7 +9,7 @@ type UserRecordResults = [UserEntity[], FieldPacket[]];
 export class UserRecord implements UserEntity {
   id?: string;
   email: string;
-  password: string | null;
+  password?: string | null;
   role: string;
   registerToken?: string | null;
 
@@ -23,9 +23,9 @@ export class UserRecord implements UserEntity {
     if (!obj.role) {
       throw new ValidationError('Role cannot be empty.');
     }
-    if (!obj.password || obj.password.length > 255) {
-      throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
-    }
+    // if (obj.password.length > 255) {
+    //   throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
+    // }
 
     this.id = obj.id ?? uuid();
     this.email = obj.email;
@@ -34,15 +34,17 @@ export class UserRecord implements UserEntity {
     this.registerToken = obj.registerToken ?? null;
   }
 
-  async insert(): Promise<void> {
-    const registerToken = uuid();
+  async insert(): Promise<string> {
+    this.registerToken = this.registerToken ?? uuid();
     await pool.execute(
-      'INSERT INTO `user` (`id`, `email`, `password`,' + ' `role`,`registerToken`)VALUES(:id,:email, :password, :role, :registerToken)',
+      'INSERT INTO `user` (`id`, `email`, `password`,`role`,`registerToken`)VALUES(:id,:email, :password, :role, :registerToken)',
       {
         ...this,
-        registerToken: registerToken,
+        registerToken: this.registerToken,
       }
     );
+
+    return this.registerToken;
   }
 
   static async getOneByEmail(email: string): Promise<UserEntity> {
