@@ -18,6 +18,9 @@ hrRouter.post('/', async (req, res) => {
   const addUser = new UserRecord(user);
   await addUser.insert();
 
+  if (!req.body.fullName || !req.body.fullName || !req.body.fullName) {
+    throw new ValidationError('Nie podano wszystkich informacji !');
+  }
   const hr = {
     ...req.body,
     user_id: addUser.id,
@@ -27,7 +30,8 @@ hrRouter.post('/', async (req, res) => {
   const addHr = new HrRecord(hr);
   try {
     await addHr.insert();
-  } catch (err) {}
-
+  } catch (err) {
+    console.log(err);
+  }
   res.send('Dodano HR do bazy danych');
 });
