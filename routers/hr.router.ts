@@ -13,7 +13,10 @@ hrRouter.post('/', async (req, res) => {
   };
 
   if (!user.email) {
-    throw new ValidationError('Email jest wymagany ');
+    throw new ValidationError('Email jest wymagany');
+  }
+  if (await UserRecord.getOneByEmail(req.body.email)) {
+    throw new ValidationError('Uzytkownik o takim Emailu juz istnieje !');
   }
 
   const addUser = new UserRecord(user);
