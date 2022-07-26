@@ -8,15 +8,25 @@ uploadRouter.post('/', async (req, res) => {
     throw new ValidationError('Nie przesłano pliku !');
   }
 
-  try {
-    const [data] = Object.entries(req.files);
-    const primaryData: any = data[1];
+  const [data] = Object.entries(req.files);
+  const primaryData: any = data[1];
 
-    const finallyData = [...JSON.parse(primaryData.data)];
-
-    console.log(finallyData);
-    res.send('ok');
-  } catch (err) {
-    throw new ValidationError('Błąd spróbuj ponownie później');
+  if (primaryData.mimetype !== 'application/json') {
+    throw new ValidationError('Plik musi być w formacie JSON !');
   }
+
+  const parseData = JSON.parse(primaryData.data);
+  const emailValidate = new RegExp('@');
+
+  const validateData = parseData.map((el: any) => {
+    if (!emailValidate.test(el.email)) {
+      throw new ValidationError('Dane z pliku są nieprawidłowe, email musi zawierać @');
+    } else {
+      return el;
+    }
+  });
+
+  // Do zrobienia: dodawanie do bazy danych oraz walidacja uzytkownikow podczas dodawania.
+
+  res.status(200).json('the files has been uploading Success');
 });
