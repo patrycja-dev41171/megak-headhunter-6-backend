@@ -34,15 +34,17 @@ export class UserRecord implements UserEntity {
     this.registerToken = obj.registerToken ?? null;
   }
 
-  async insert(): Promise<void> {
-    const registerToken = uuid();
+  async insert(): Promise<string> {
+    this.registerToken = this.registerToken ?? uuid();
     await pool.execute(
       'INSERT INTO user (id, email, password,' + ' role,registerToken)VALUES(:id,:email, :password, :role, :registerToken)',
       {
         ...this,
-        registerToken: registerToken,
+        registerToken: this.registerToken,
       }
     );
+
+    return this.registerToken;
   }
   static async getOneByEmail(email: string): Promise<UserEntity> {
     const [results] = (await pool.execute('SELECT * FROM user WHERE email = :email', {
