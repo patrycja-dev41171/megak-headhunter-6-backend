@@ -11,6 +11,7 @@ import { loginRouter } from './routers/login.router';
 import cookieParser from 'cookie-parser';
 import { refreshTokenRouter } from './routers/refreshToken.router';
 import fileUpload = require('express-fileupload');
+import {forgotPasswordRouter} from "./routers/forgotPassword.router";
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use(fileUpload());
 app.use(
   cors({
     origin: 'http://localhost:3000',
-      credentials: true,
+    credentials: true,
   })
 );
 
@@ -45,6 +46,7 @@ app.use(morgan('common'));
 app.use('/upload', uploadRouter);
 app.use('/login', loginRouter);
 app.use('/refresh-token', refreshTokenRouter);
+app.use('/forgot-password', forgotPasswordRouter);
 
 app.use(handleError);
 
