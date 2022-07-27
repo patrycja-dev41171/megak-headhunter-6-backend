@@ -1,53 +1,69 @@
 export enum ExpectedTypeWork {
-    OnPlace= 'Na miejscu',
-    ReadyToMove = 'Gotowość do przeprowadzki',
-    OnlyRemote = 'Praca zdalna',
-    Hybrid = 'Hybrydowo',
-    DoesNotMatter = 'Wszystko jedno',
+  OnPlace = 'Na miejscu',
+  ReadyToMove = 'Gotowość do przeprowadzki',
+  OnlyRemote = 'Praca zdalna',
+  Hybrid = 'Hybrydowo',
+  DoesNotMatter = 'Wszystko jedno',
 }
 
 export enum ExpectedContractType {
-    EmploymentContract ='Tylko UoP',
-    B2B = 'Możliwa B2B',
-    ContractOfServices = 'Możliwe UZ/UoD',
-    DoesNotMatter = 'Brak preferencji',
+  EmploymentContract = 'Tylko UoP',
+  B2B = 'Możliwa B2B',
+  ContractOfServices = 'Możliwe UZ/UoD',
+  DoesNotMatter = 'Brak preferencji',
 }
 
 export enum Status {
-    Available = 'Dostępny',
-    Reserved = 'W trakcie rozmowy',
-    Hired = 'Zatrudniony',
+  Available = 'Dostępny',
+  Reserved = 'W trakcie rozmowy',
+  Hired = 'Zatrudniony',
+}
 
+export interface StudentImport {
+  user_id: string;
+  email: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  bonusProjectUrls: string;
 }
 
 export interface StudentEntityImport {
-    id: string;
-    email: string;
-    courseCompletion: number;
-    courseEngagement: number;
-    projectDegree: number;
-    teamProjectDegree: number;
-    bonusProjectUrls: string[];
+  id: string;
+  email: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  bonusProjectUrls: string;
 }
 
-export interface StudentEntity extends StudentEntityImport {
-    tel?: number;
-    firstName: string;
-    lastName: string;
-    githubUserName: string;
-    portfolioUrls?: string[];
-    projectUrls: string[];
-    bio?: string;
-    expectedTypeWork:ExpectedTypeWork;
-    targetWorkCity?: string;
-    expectedContractType: ExpectedContractType;
-    expectedSalary?: number;
-    canTakeApprenticeship: boolean;
-    monthsOfCommercialExp: number;
-    education?: string;
-    workExperience?: string;
-    courses?: string;
-    status: Status;
-    user_id?: string;
-    hr_id?: string;
+export interface StudentEntity {
+  id?: string;
+  email: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  bonusProjectUrls: string;
+  tel?: number | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  githubUserName?: string | null;
+  portfolioUrls?: string[] | null;
+  projectUrls?: string[] | null;
+  bio?: string | null;
+  expectedTypeWork?: ExpectedTypeWork | null;
+  targetWorkCity?: string | null;
+  expectedContractType?: ExpectedContractType | null;
+  expectedSalary?: number | null;
+  canTakeApprenticeship?: boolean | null;
+  monthsOfCommercialExp?: number | null;
+  education?: string | null;
+  workExperience?: string | null;
+  courses?: string | null;
+  status?: Status | null;
+  user_id?: string | null;
+  hr_id?: string | null;
 }

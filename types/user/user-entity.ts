@@ -5,3 +5,8 @@ export interface UserEntity {
   role: string;
   registerToken?: string | null;
 }
+
+export interface userUpload {
+  email: string;
+  role: string;
+}

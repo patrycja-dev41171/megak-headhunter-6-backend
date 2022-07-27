@@ -22,7 +22,7 @@ hrRouter.post('/', async (req, res) => {
   const addUser = new UserRecord(user);
   const tokenRegister = await addUser.insert();
 
-  if (!req.body.fullName || !req.body.company || !req.body.maxReservedStudents) {
+  if (!req.body.fullname || !req.body.company || !req.body.maxReservedStudents) {
     throw new ValidationError('Nie podano wszystkich informacji !');
   }
 
