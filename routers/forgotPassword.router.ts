@@ -6,6 +6,8 @@ import { HrUserEntity } from '../types';
 import { FieldPacket } from 'mysql2';
 import { StudentUserEntity } from '../types/student/student_user-entity';
 import { sendEmail } from '../utils/sendEmail';
+import {emailToHr} from "../utils/emails/email-forgotPassword-hr";
+import {emailToStudent} from "../utils/emails/email-forgotPassword-student";
 
 export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   const { email, confirmEmail } = req.body;
@@ -24,7 +26,13 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   type HrUserRecordResult = [HrUserEntity[], FieldPacket[]];
   type StudentUserRecordResult = [StudentUserEntity[], FieldPacket[]];
 
-  const attachment = [{}];
+  const attachment = [
+    {
+      filename: 'logo&background.png',
+      path: './assets/logo&background.png',
+      cid: 'logo&background.png',
+    },
+  ];
 
   try {
     if (data.role === 'hr') {
@@ -36,9 +44,9 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
         }
       )) as HrUserRecordResult;
       const hr = results.length === 0 ? null : results[0];
+      const html = emailToHr(hr, link);
+      sendEmail(hr.email, 'MegaK - HeadHunter#6', html, attachment);
 
-      const html = `<html><head><style>h1{color:#ff6f37;}h2{color:cadetblue;}</style></head><body><h1>Witaj HR - ${hr.fullName} z firmy ${hr.company}</h1><h2>Zmiana hasła do konta.</h2><p>Aby móc ponownie zalogować się do aplikacji zmień hasło na nowe na stronie: <a href=${link}>${link}</a> </p></body></html>`;
-      sendEmail(hr.email, 'HeadHunter grupa 6', html, attachment);
     } else if (data.role === 'student') {
       const [results] = (await pool.execute(
         'SELECT `user`.`id`, `user`.`email`, `user`.`role`, `student`.`firstname`,`student`.`lastname` FROM `student` INNER JOIN `user` ON `student`.`user_id`=`user`.`id`WHERE `student`.`email` = :email',
@@ -47,8 +55,8 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
         }
       )) as StudentUserRecordResult;
       const student = results.length === 0 ? null : results[0];
-      const html = `<html><head><style>h1{color:#ff6f37;}h2{color:cadetblue;}</style></head><body><h1>Witaj STUDENCIE - ${student.firstname} ${student.lastname}</h1><h2>Zmiana hasła do konta.</h2><p>Aby móc ponownie zalogować się do aplikacji zmień hasło na nowe na stronie: <a href=${link}>${link}</a> </p></body></html>`;
-      sendEmail(student.email, 'HeadHunter grupa 6', html, attachment);
+      const html = emailToStudent(student, link);
+      sendEmail(student.email, 'MegaK - HeadHunter#6', html, attachment);
     }
   } catch (err) {
     throw new ValidationError('Problem with sending email to user.');
