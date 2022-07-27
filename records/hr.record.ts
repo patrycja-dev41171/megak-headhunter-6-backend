@@ -56,8 +56,10 @@ export class HrRecord implements HrEntity {
   async insert(): Promise<void> {
     try {
       await pool.execute(
-        'INSERT INTO `hr` (`id`, `user_id`,`fullName`,`email`, `company`, `maxReservedStudents`, `users_id_list`)' +
-          ' VALUES (:id, :user_id , :fullName, :email, :company, :maxReservedStudents, :users_id_list)',
+        'INSERT INTO `hr` (`id`, `user_id`,`fullName`,`email`, `company`, `maxReservedStudents`,' +
+          ' `users_id_list`)' +
+          ' VALUES (:id, :user_id , :fullName, :email, :company, :maxReservedStudents,' +
+          ' :users_id_list)',
         this
       );
     } catch (err) {

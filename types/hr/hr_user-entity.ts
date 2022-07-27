@@ -2,6 +2,6 @@ export interface HrUserEntity {
   id: string;
   email: string;
   role: string;
-  fullname: string;
+  fullName: string;
   company: string;
 }
