@@ -3,6 +3,10 @@ import { ValidationError } from '../utils/handleErrors';
 import { UserRecord } from '../records/user.record';
 import { StudentRecord } from '../records/student.record';
 import { StudentImport } from '../types';
+import { sendEmail } from '../utils/sendEmail';
+import { emailToHrRegister } from '../utils/emails/email-register-hr';
+import { emailToStudentRegister } from '../utils/emails/email-register-student';
+import { emailAttachment } from '../utils/emails/email-attachment';
 
 export const uploadRouter = Router();
 
@@ -46,7 +50,7 @@ uploadRouter.post('/', async (req, res) => {
         };
 
         const userTable = new UserRecord(user);
-        await userTable.insert();
+        const registerToken = await userTable.insert();
 
         const userId = await UserRecord.getOneByEmail(user.email);
         const bonusArray = bonusProjectUrls.map((el: any) => el);
@@ -66,6 +70,10 @@ uploadRouter.post('/', async (req, res) => {
           const studentAdd = new StudentRecord(studentImp);
           await studentAdd.insert();
           countPeoples.push(1);
+          const link = `http://localhost:3000/register/${userId.id}/${registerToken}`;
+          const html = emailToStudentRegister(email, link);
+          const attachment = emailAttachment();
+          sendEmail(email, 'MegaK - HeadHunter#6', html, attachment);
         } catch (err) {
           console.log(err);
         }
