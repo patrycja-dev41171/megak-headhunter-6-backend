@@ -8,6 +8,7 @@ import { StudentUserEntity } from '../types/student/student_user-entity';
 import { sendEmail } from '../utils/sendEmail';
 import { emailToHr } from '../utils/emails/email-forgotPassword-hr';
 import { emailToStudent } from '../utils/emails/email-forgotPassword-student';
+import {emailAttachment} from "../utils/emails/email-attachment";
 
 export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   const { email, confirmEmail } = req.body;
@@ -26,13 +27,7 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   type HrUserRecordResult = [HrUserEntity[], FieldPacket[]];
   type StudentUserRecordResult = [StudentUserEntity[], FieldPacket[]];
 
-  const attachment = [
-    {
-      filename: 'logo&background.png',
-      path: './assets/logo&background.png',
-      cid: 'logo&background.png',
-    },
-  ];
+  const attachment = emailAttachment();
 
   try {
     if (data.role === 'hr') {

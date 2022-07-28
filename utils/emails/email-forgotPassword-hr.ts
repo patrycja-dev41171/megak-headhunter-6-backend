@@ -4,7 +4,6 @@ import { emailsStyle } from './emails-style';
 export const emailToHr = (hr: HrUserEntity, link: string) => {
   const style = emailsStyle();
   const html = `
-<!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -26,7 +25,7 @@ export const emailToHr = (hr: HrUserEntity, link: string) => {
                   <tr><td><p>Aby móc ponownie korzystać z systemu wpisz nowe hasło w poniższym linku.</p></td></tr>
                   <tr><td><a href="http://localhost:3000/change-password/${hr.id}" target="_blank">Zmiana hasła</a></td></tr>
                   <tr class="tr_img"><img src="cid:logo&background.png" alt="Logo MegaK"></tr>
-                  <tr><td><p>Jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła zignoruj tę wiadomość.</p></td></tr>
+                  <tr><td><p>Zignoruj tę wiadomość jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła.</p></td></tr>
                   <tr><td><p class="p_strong">Pozdrawia zespół MegaK-HeadHunter#6.</p></td></tr>
                   <tr><td><span>MegaK - HeadHunter#6 Poland 2022.</span></td></tr>
                   </tbody>
