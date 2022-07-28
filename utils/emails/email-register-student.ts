@@ -1,26 +1,27 @@
 import { emailsStyle } from './emails-style';
-import {StudentUserEntity} from "../../types/student/student_user-entity";
+import { StudentUserEntity } from '../../types/student/student_user-entity';
 
-export const emailToStudentRegister = (student: StudentUserEntity, link: string) => {
-    const style = emailsStyle();
-    const html = `
+export const emailToStudentRegister = (email: string, link: string) => {
+  const style = emailsStyle();
+  const html = `
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dla Hr od MegaK - HeadHunter</title>
+    <title>MegaK - HeadHunter#6</title>
     ${style}
   </head>
   <body>
   <table class="body">
+<!--  -->
     <tr>
       <td class="left_container"></td>
       <td class="main_container">
         <div class="content">
           <table class="main">
                   <tbody>
-                  <tr><td><h1>Cześć ${student.firstname} ${student.lastname}</h1></td></tr>
+                  <tr><td><h1>Cześć użytkowniku ${email}</h1></td></tr>
                   <tr><td><p>Zostałeś dodany do systemu MegaK-HeadHunter przez admina.</p></td></tr>
                   <tr><td><p>Aby móc w pełni korzystać ze strony dokończ rejestrację dodając hasło w linku poniżej.</p></td></tr>
                   <tr><td><a href=${link} target="_blank">Dodaj hasło</a></td></tr>
@@ -38,5 +39,5 @@ export const emailToStudentRegister = (student: StudentUserEntity, link: string)
   </body>
 </html>
 </html>`;
-    return html;
+  return html;
 };
