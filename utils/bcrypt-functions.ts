@@ -18,4 +18,3 @@ export const isPasswordCorrect = (passwordEntered: string, hashedPassword: strin
   }
   return false;
 };
-
