@@ -18,7 +18,6 @@ hrRouter.post('/', async (req, res) => {
   if (await UserRecord.getOneByEmail(req.body.email)) {
     throw new ValidationError('Uzytkownik o takim Emailu juz istnieje !');
   }
-
   const addUser = new UserRecord(user);
   const tokenRegister = await addUser.insert();
 
