@@ -3,6 +3,7 @@ import { ValidationError } from '../utils/handleErrors';
 import { UserRecord } from '../records/user.record';
 import { HrRecord } from '../records/hr.record';
 import { sendEmail } from '../utils/sendEmail';
+import { emailToHrRegister } from '../utils/emails/email-register-hr';
 
 export const hrRouter = Router();
 
@@ -34,9 +35,9 @@ hrRouter.post('/', async (req, res) => {
 
   const attachment = [
     {
-      filename: 'unique@kreata.png',
-      path: './assets/unique@kreata.png',
-      cid: 'unique@kreata.png',
+      filename: 'logo&background.png',
+      path: './assets/logo&background.png',
+      cid: 'logo&background.png',
     },
   ];
 
@@ -45,8 +46,8 @@ hrRouter.post('/', async (req, res) => {
   try {
     await addHr.insert();
     const link = `http://localhost:3000/register/${addUser.id}/${tokenRegister}`;
-    const html = `<html><head><style>h1{color:#ff6f37;}h2{color:cadetblue;}</style></head><body><h1>Witaj ${addHr.fullName} </h1><h2>Zapraszamy do rejestracji :)</h2><p>Aby zakończyć rejestracje proszę kliknij w link: <a href=${link}>${link}</a> </p><img src="cid:unique@kreata.png" alt="asda"></body></html>`;
-    sendEmail(addHr.email, 'HeadHunter grupa 6', html, attachment);
+    const html = emailToHrRegister(addHr, link);
+    sendEmail(addHr.email, 'MegaK - HeadHunter#6', html, attachment);
   } catch (err) {
     console.log(err);
   }
