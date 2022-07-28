@@ -3,70 +3,39 @@ import { emailsStyle } from './emails-style';
 
 export const emailToHr = (hr: HrUserEntity, link: string) => {
   const style = emailsStyle();
-  const html = `<!doctype html>
-<html>
+  const html = `
+<!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Email to hr with link to change password.</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dla Hr od MegaK - HeadHunter</title>
     ${style}
   </head>
   <body>
-    <table role="presentation" class="body">
-      <tr>
-        <td>&nbsp;</td>
-        <td class="container">
-          <div class="content">
-            <table role="presentation" class="main">
-              <tr>
-                <td class="wrapper">
-                  <table role="presentation">
-                    <tr>
-                      <td>
-                        <h2>Cześć ${hr.fullName}</h2>
-                        <p>Odebraliśmy od Ciebie prośbę o przypomnienie hasła. Aby móc ponownie korzystać z systemu wpisz nowe hasło w poniższym linku.</p>
-                        <table role="presentation" class="btn btn-primary">
-                          <tbody>
-                            <tr>
-                              <td >
-                                <table role="presentation">
-                                  <tbody>
-                                    <tr>
-                                      <td> <a href="http://localhost:3000/change-password/${hr.id}" target="_blank">Zmiana hasła</a> </td>
-                                    </tr>
-                                    <tr class="tr_img"><img src="cid:logo&background.png" alt="Logo MegaK"></tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <p>Jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła zignoruj tę wiadomość.</p>
-                        <p>Pozdrawia zespół MegaK-HeadHunter#6.</p>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-            <div class="footer">
-              <table role="presentation">
-                <tr>
-                  <td class="content-block">
-                    <span class="apple-link">MegaK, HeadHunter#6 Poland.</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="content-block powered-by">
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </td>
-        <td>&nbsp;</td>
-      </tr>
-    </table>
+  <table class="body">
+    <tr>
+      <td class="left_container"></td>
+      <td class="main_container">
+        <div class="content">
+          <table class="main">
+                  <tbody>
+                  <tr><td><h1>Cześć ${hr.fullName}</h1></td></tr>
+                  <tr><td><p>Odebraliśmy od Ciebie prośbę o przypomnienie hasła.</p></td></tr>
+                  <tr><td><p>Aby móc ponownie korzystać z systemu wpisz nowe hasło w poniższym linku.</p></td></tr>
+                  <tr><td><a href="http://localhost:3000/change-password/${hr.id}" target="_blank">Zmiana hasła</a></td></tr>
+                  <tr class="tr_img"><img src="cid:logo&background.png" alt="Logo MegaK"></tr>
+                  <tr><td><p>Jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła zignoruj tę wiadomość.</p></td></tr>
+                  <tr><td><p class="p_strong">Pozdrawia zespół MegaK-HeadHunter#6.</p></td></tr>
+                  <tr><td><span>MegaK - HeadHunter#6 Poland 2022.</span></td></tr>
+                  </tbody>
+          </table>
+        </div>
+      </td>
+      <td class="right_container"></td>
+    </tr>
+  </table>
   </body>
 </html>`;
   return html;

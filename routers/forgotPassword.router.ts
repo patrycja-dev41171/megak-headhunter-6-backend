@@ -6,8 +6,8 @@ import { HrUserEntity } from '../types';
 import { FieldPacket } from 'mysql2';
 import { StudentUserEntity } from '../types/student/student_user-entity';
 import { sendEmail } from '../utils/sendEmail';
-import {emailToHr} from "../utils/emails/email-forgotPassword-hr";
-import {emailToStudent} from "../utils/emails/email-forgotPassword-student";
+import { emailToHr } from '../utils/emails/email-forgotPassword-hr';
+import { emailToStudent } from '../utils/emails/email-forgotPassword-student';
 
 export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   const { email, confirmEmail } = req.body;
@@ -37,8 +37,7 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   try {
     if (data.role === 'hr') {
       const [results] = (await pool.execute(
-        'SELECT `user`.`id`, `user`.`email`, `user`.`role`, `hr`.`fullName`, `hr`.`company`' +
-          ' FROM`hr` INNER JOIN `user` ON `hr`.`user_id` = `user`.`id` WHERE `hr`.`email` = :email',
+        'SELECT `user`.`id`, `user`.`email`, `user`.`role`, `hr`.`fullName`, `hr`.`company` FROM`hr` INNER JOIN `user` ON `hr`.`user_id` = `user`.`id` WHERE `hr`.`email` = :email',
         {
           email: data.email,
         }
@@ -46,7 +45,6 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
       const hr = results.length === 0 ? null : results[0];
       const html = emailToHr(hr, link);
       sendEmail(hr.email, 'MegaK - HeadHunter#6', html, attachment);
-
     } else if (data.role === 'student') {
       const [results] = (await pool.execute(
         'SELECT `user`.`id`, `user`.`email`, `user`.`role`, `student`.`firstname`,`student`.`lastname` FROM `student` INNER JOIN `user` ON `student`.`user_id`=`user`.`id`WHERE `student`.`email` = :email',

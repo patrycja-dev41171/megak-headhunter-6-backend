@@ -1,9 +1,10 @@
 import { emailsStyle } from './emails-style';
-import { StudentUserEntity } from '../../types/student/student_user-entity';
+import { HrRecord } from '../../records/hr.record';
 
-export const emailToStudent = (student: StudentUserEntity, link: string) => {
+export const emailToHrRegister = (hr: HrRecord, link: string) => {
   const style = emailsStyle();
-  const html = `<!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  const html = `
+<!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -20,12 +21,12 @@ export const emailToStudent = (student: StudentUserEntity, link: string) => {
         <div class="content">
           <table class="main">
                   <tbody>
-                  <tr><td><h1>Cześć ${student.firstname} ${student.lastname}</h1></td></tr>
-                  <tr><td><p>Odebraliśmy od Ciebie prośbę o przypomnienie hasła.</p></td></tr>
-                  <tr><td><p>Aby móc ponownie korzystać z systemu wpisz nowe hasło w poniższym linku.</p></td></tr>
-                  <tr><td><a href="http://localhost:3000/change-password/${student.id}" target="_blank">Zmiana hasła</a></td></tr>
+                  <tr><td><h1>Cześć ${hr.fullName}</h1></td></tr>
+                  <tr><td><p>Zostałeś dodany do systemu MegaK-HeadHunter przez admina.</p></td></tr>
+                  <tr><td><p>Aby móc w pełni korzystać ze strony dokończ rejestrację dodając hasło w linku poniżej.</p></td></tr>
+                  <tr><td><a href=${link} target="_blank">Dodaj hasło</a></td></tr>
                   <tr class="tr_img"><img src="cid:logo&background.png" alt="Logo MegaK"></tr>
-                  <tr><td><p>Jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła zignoruj tę wiadomość.</p></td></tr>
+                  <tr><td><p>Zignoruj tę wiadomość jeśli nie wiesz dlaczego zostałeś dodany do systemu przez admina.</p></td></tr>
                   <tr><td><p class="p_strong">Pozdrawia zespół MegaK-HeadHunter#6.</p></td></tr>
                   <tr><td><span>MegaK - HeadHunter#6 Poland 2022.</span></td></tr>
                   </tbody>
@@ -36,6 +37,7 @@ export const emailToStudent = (student: StudentUserEntity, link: string) => {
     </tr>
   </table>
   </body>
+</html>
 </html>`;
   return html;
 };
