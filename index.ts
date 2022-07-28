@@ -13,6 +13,7 @@ import { refreshTokenRouter } from './routers/refreshToken.router';
 import { hrRouter } from './routers/hr.router';
 import fileUpload = require('express-fileupload');
 import { forgotPasswordRouter } from './routers/forgotPassword.router';
+import { changePasswordRouter } from './routers/changePassword.router';
 import { registerRouter } from './routers/register.router';
 
 const app = express();
@@ -51,6 +52,7 @@ app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/refresh-token', refreshTokenRouter);
 app.use('/forgot-password', forgotPasswordRouter);
+app.use('/change-password', changePasswordRouter);
 
 app.use(handleError);
 

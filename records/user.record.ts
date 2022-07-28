@@ -60,11 +60,17 @@ export class UserRecord implements UserEntity {
     })) as UserRecordResults;
     return results.length === 0 ? null : new UserRecord(results[0]);
   }
-
+  
   static async getAll(): Promise<UserEntity[]> {
     const [results] = (await pool.execute('SELECT * FROM `user` ')) as UserRecordResults;
     return results.map(obj => new UserRecord(obj));
   }
+
+  static async updatePassword(id: string, password: string): Promise<void> {
+    await pool.execute('UPDATE `user` SET `password` = :password WHERE `id` = :id', {
+      id,
+      password,
+    });
 
   static async updateOneRegister(password: string, id: string, registerToken: string | null): Promise<void> {
       await pool.execute('UPDATE`user`SET`password`=:password, `registerToken`= :registerToken WHERE`id`=:id', {
