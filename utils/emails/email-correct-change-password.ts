@@ -1,9 +1,8 @@
-import { HrUserEntity } from '../../types';
 import { emailsStyle } from './emails-style';
 
-export const emailToHr = (hr: HrUserEntity, link: string) => {
-  const style = emailsStyle();
-  const html = `
+export const emailCorrectChangePassword = (email:string) => {
+    const style = emailsStyle();
+    const html = `
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -20,12 +19,13 @@ export const emailToHr = (hr: HrUserEntity, link: string) => {
         <div class="content">
           <table class="main">
                   <tbody>
-                  <tr><td><h1>Cześć ${hr.fullName}</h1></td></tr>
-                  <tr><td><p>Odebraliśmy od Ciebie prośbę o przypomnienie hasła.</p></td></tr>
-                  <tr><td><p>Aby móc ponownie korzystać z systemu wpisz nowe hasło w poniższym linku.</p></td></tr>
-                  <tr><td><a href="http://localhost:3000/change-password/${hr.id}" target="_blank">Zmiana hasła</a></td></tr>
+                  <tr><td><h1>Zmiana hasła</h1></td></tr>
+                  <tr><td><p>Użytkowniku o emailu: ${email}</p></td></tr>
+                  <tr><td><p>Twoje hasło zostało poprawnie zmienione w systemie: MegaK-HeadHunter.</p></td></tr>
+                  <tr><td><p>Możesz zalogować się do strony w linku poniżej.</p></td></tr>
+                  <tr><td><a href="http://localhost:3000/login" target="_blank">Zaloguj się</a></td></tr>
                   <tr class="tr_img"><img src="cid:logo&background.png" alt="Logo MegaK"></tr>
-                  <tr><td><p>Zignoruj tę wiadomość jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła.</p></td></tr>
+                  <tr><td><p>Wiadomość wysyłana automatycznie. Prosimy na nią nie odpowiadać.</p></td></tr>
                   <tr><td><p class="p_strong">Pozdrawia zespół MegaK-HeadHunter#6.</p></td></tr>
                   <tr><td><span>MegaK - HeadHunter#6 Poland 2022.</span></td></tr>
                   </tbody>
@@ -36,6 +36,7 @@ export const emailToHr = (hr: HrUserEntity, link: string) => {
     </tr>
   </table>
   </body>
+</html>
 </html>`;
-  return html;
+    return html;
 };

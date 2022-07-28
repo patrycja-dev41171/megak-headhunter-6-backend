@@ -3,6 +3,10 @@ import { ValidationError } from '../utils/handleErrors';
 import { UserRecord } from '../records/user.record';
 import { StudentRecord } from '../records/student.record';
 import { StudentImport } from '../types';
+import { sendEmail } from '../utils/sendEmail';
+import { emailToHrRegister } from '../utils/emails/email-register-hr';
+import { emailToStudentRegister } from '../utils/emails/email-register-student';
+import { emailAttachment } from '../utils/emails/email-attachment';
 
 export const uploadRouter = Router();
 
@@ -23,25 +27,30 @@ uploadRouter.post('/', async (req, res) => {
 
   const validateData = parseData.map((el: StudentImport) => {
     if (!emailValidate.test(el.email)) {
-      throw new ValidationError('Dane z pliku są nieprawidłowe, email musi zawierać @');
+      throw new ValidationError(`Dane z pliku są nieprawidłowe, email: ${el.email} musi zawierać @, popraw dane i spróbuj ponownie`);
     } else {
       return el;
     }
   });
 
+  const countPeoples: number[] = [0];
+
   for (const importStudent of validateData) {
     const { email, courseCompletion, courseEngagement, projectDegree, teamProjectDegree, bonusProjectUrls } = importStudent;
-    if (!email) {
-      throw new ValidationError('Struktura pliku musi posiadać email !');
+
+    if (!email || !courseCompletion || !courseEngagement || !projectDegree || !teamProjectDegree || !bonusProjectUrls) {
+      throw new ValidationError('Wystąpił błąd sprawdz strukture pliku i spróbuj ponownie !');
     }
-    const user = {
-      email,
-      role: 'student',
-    };
+
     const addUser = async () => {
-      if (user) {
+      if (!(await UserRecord.getOneByEmail(email))) {
+        const user = {
+          email,
+          role: 'student',
+        };
+
         const userTable = new UserRecord(user);
-        await userTable.insert();
+        const registerToken = await userTable.insert();
 
         const userId = await UserRecord.getOneByEmail(user.email);
         const bonusArray = bonusProjectUrls.map((el: any) => el);
@@ -60,16 +69,32 @@ uploadRouter.post('/', async (req, res) => {
         try {
           const studentAdd = new StudentRecord(studentImp);
           await studentAdd.insert();
+          countPeoples.push(1);
+          const link = `http://localhost:3000/register/${userId.id}/${registerToken}`;
+          const html = emailToStudentRegister(email, link);
+          const attachment = emailAttachment();
+          sendEmail(email, 'MegaK - HeadHunter#6', html, attachment);
         } catch (err) {
           console.log(err);
         }
       }
     };
-
     await addUser();
   }
 
-  // Do zrobienia: dodawanie do bazy danych oraz walidacja uzytkownikow podczas dodawania.
+  const peoplesCount = countPeoples.reduce((prev, curr) => (prev += curr), 0);
 
-  res.status(200).json('the files has been uploading Success');
+  const info = peoplesCount > 0;
+  res
+    .status(200)
+    .json(
+      `${
+        info
+          ? `Dodano  łącznie:  ${peoplesCount} studentów`
+          : `Dodano ${peoplesCount} uzytkowników ponieważ dani uzytkownicy znajdują się już w bazie`
+      }`
+    );
+  countPeoples.length = 0;
+
+  // pozostało dodanie emaila !;
 });
