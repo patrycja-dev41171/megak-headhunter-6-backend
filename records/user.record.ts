@@ -43,7 +43,6 @@ export class UserRecord implements UserEntity {
         registerToken: this.registerToken,
       }
     );
-
     return this.registerToken;
   }
 
