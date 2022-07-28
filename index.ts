@@ -12,7 +12,8 @@ import cookieParser from 'cookie-parser';
 import { refreshTokenRouter } from './routers/refreshToken.router';
 import { hrRouter } from './routers/hr.router';
 import fileUpload = require('express-fileupload');
-import {forgotPasswordRouter} from "./routers/forgotPassword.router";
+import { forgotPasswordRouter } from './routers/forgotPassword.router';
+import { registerRouter } from './routers/register.router';
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use(morgan('common'));
 app.use('/admin/upload/students', uploadRouter);
 app.use('/admin/add-hr', hrRouter);
 app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 app.use('/refresh-token', refreshTokenRouter);
 app.use('/forgot-password', forgotPasswordRouter);
 

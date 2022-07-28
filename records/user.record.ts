@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
 import { pool } from '../utils/db';
 import { UserEntity } from '../types';
+import { registerRouter } from '../routers/register.router';
 
 type UserRecordResults = [UserEntity[], FieldPacket[]];
 
@@ -63,5 +64,13 @@ export class UserRecord implements UserEntity {
   static async getAll(): Promise<UserEntity[]> {
     const [results] = (await pool.execute('SELECT * FROM `user` ')) as UserRecordResults;
     return results.map(obj => new UserRecord(obj));
+  }
+
+  static async updateOneRegister(password: string, id: string, registerToken: string | null): Promise<void> {
+      await pool.execute('UPDATE`user`SET`password`=:password, `registerToken`= :registerToken WHERE`id`=:id', {
+        password: password,
+        registerToken: null,
+        id: id,
+      });
   }
 }
