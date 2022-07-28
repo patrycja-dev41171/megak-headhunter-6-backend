@@ -60,4 +60,11 @@ export class UserRecord implements UserEntity {
     })) as UserRecordResults;
     return results.length === 0 ? null : new UserRecord(results[0]);
   }
+
+  static async updatePassword(id: string, password: string): Promise<void> {
+    await pool.execute('UPDATE `user` SET `password` = :password WHERE `id` = :id', {
+      id,
+      password,
+    });
+  }
 }

@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { ValidationError } from './handleErrors';
 
-export const hashPassword = (password: string): string | Error => {
+export const hashPassword = (password: string): string => {
   try {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
@@ -18,4 +18,3 @@ export const isPasswordCorrect = (passwordEntered: string, hashedPassword: strin
   }
   return false;
 };
-
