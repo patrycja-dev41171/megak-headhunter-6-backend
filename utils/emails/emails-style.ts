@@ -48,7 +48,7 @@ export const emailsStyle = () => {
         padding: 15px 0 ;
       }
 
-      a {
+      a, a:visited, a:active{
         color: #000000;
         text-decoration: underline;
         font-size: 20px;
@@ -57,7 +57,7 @@ export const emailsStyle = () => {
       }
 
       a:hover {
-        color: #E02735;
+        color: rgba(255,0,0,0.57);
         cursor: pointer;
       }
 
@@ -99,6 +99,6 @@ export const emailsStyle = () => {
           border-right-width: 0;
         }
       }
-    </style>`
+    </style>`;
   return style;
 };

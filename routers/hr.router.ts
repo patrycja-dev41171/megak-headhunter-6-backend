@@ -4,6 +4,7 @@ import { UserRecord } from '../records/user.record';
 import { HrRecord } from '../records/hr.record';
 import { sendEmail } from '../utils/sendEmail';
 import { emailToHrRegister } from '../utils/emails/email-register-hr';
+import {emailAttachment} from "../utils/emails/email-attachment";
 
 export const hrRouter = Router();
 
@@ -33,13 +34,7 @@ hrRouter.post('/', async (req, res) => {
     users_id_list: JSON.stringify([]),
   };
 
-  const attachment = [
-    {
-      filename: 'logo&background.png',
-      path: './assets/logo&background.png',
-      cid: 'logo&background.png',
-    },
-  ];
+  const attachment = emailAttachment();
 
   const addHr = new HrRecord(hr);
 
