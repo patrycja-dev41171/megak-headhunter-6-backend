@@ -8,7 +8,7 @@ import { StudentUserEntity } from '../types/student/student_user-entity';
 import { sendEmail } from '../utils/sendEmail';
 import { emailToHr } from '../utils/emails/email-forgotPassword-hr';
 import { emailToStudent } from '../utils/emails/email-forgotPassword-student';
-import {emailAttachment} from "../utils/emails/email-attachment";
+import { emailAttachment } from '../utils/emails/email-attachment';
 
 export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   const { email, confirmEmail } = req.body;
@@ -54,7 +54,5 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   } catch (err) {
     throw new ValidationError('Problem with sending email to user.');
   }
-  res.json({
-    message: 'Email has been sent correctly.',
-  });
+  res.json('Email has been sent correctly.').status(200);
 });
