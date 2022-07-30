@@ -4,7 +4,7 @@ import { UserRecord } from '../records/user.record';
 import { HrRecord } from '../records/hr.record';
 import { sendEmail } from '../utils/sendEmail';
 import { emailToHrRegister } from '../utils/emails/email-register-hr';
-import {emailAttachment} from "../utils/emails/email-attachment";
+import { emailAttachment } from '../utils/emails/email-attachment';
 
 export const hrRouter = Router();
 
@@ -45,7 +45,5 @@ hrRouter.post('/', async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  res.json({
-    message: 'Dodano HR do bazy danych.',
-  });
+  res.json('Dodano HR do bazy danych.');
 });
