@@ -23,9 +23,9 @@ export class UserRecord implements UserEntity {
     if (!obj.role) {
       throw new ValidationError('Role cannot be empty.');
     }
-    // if (obj.password.length > 255) {
-    //   throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
-    // }
+    if (obj.password !== null && obj.password !== undefined && obj.password.length > 255) {
+      throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
+    }
 
     this.id = obj.id ?? uuid();
     this.email = obj.email;
