@@ -4,7 +4,6 @@ import { UserRecord } from '../records/user.record';
 import { StudentRecord } from '../records/student.record';
 import { StudentImport } from '../types';
 import { sendEmail } from '../utils/sendEmail';
-import { emailToHrRegister } from '../utils/emails/email-register-hr';
 import { emailToStudentRegister } from '../utils/emails/email-register-student';
 import { emailAttachment } from '../utils/emails/email-attachment';
 
