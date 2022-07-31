@@ -39,26 +39,47 @@ export interface StudentEntityImport {
   bonusProjectUrls: string;
 }
 
+export interface studentEntityFront {
+  email: string;
+  tel: number | null;
+  firstName: string | null;
+  lastName: string | null;
+  githubUserName: string | null;
+  portfolioUrls?: string | null;
+  projectUrls: string | null;
+  bio: string | null;
+  expectedTypeWork: ExpectedTypeWork | null;
+  targetWorkCity: string | null;
+  expectedContractType: ExpectedContractType | null;
+  expectedSalary: number | null;
+  canTakeApprenticeship: number | null;
+  monthsOfCommercialExp: number | null;
+  education: string | null;
+  workExperience: string | null;
+  courses: string | null;
+  status: Status | null;
+}
+
 export interface StudentEntity {
   id?: string;
   email: string;
-  courseCompletion: number;
-  courseEngagement: number;
-  projectDegree: number;
-  teamProjectDegree: number;
-  bonusProjectUrls: string;
+  courseCompletion?: number;
+  courseEngagement?: number;
+  projectDegree?: number;
+  teamProjectDegree?: number;
+  bonusProjectUrls?: string;
   tel?: number | null;
   firstName?: string | null;
   lastName?: string | null;
   githubUserName?: string | null;
-  portfolioUrls?: string[] | null;
-  projectUrls?: string[] | null;
+  portfolioUrls?: string | null;
+  projectUrls?: string | null;
   bio?: string | null;
   expectedTypeWork?: ExpectedTypeWork | null;
   targetWorkCity?: string | null;
   expectedContractType?: ExpectedContractType | null;
   expectedSalary?: number | null;
-  canTakeApprenticeship?: boolean | null;
+  canTakeApprenticeship?: number | null;
   monthsOfCommercialExp?: number | null;
   education?: string | null;
   workExperience?: string | null;

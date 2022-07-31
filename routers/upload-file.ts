@@ -4,17 +4,15 @@ import { UserRecord } from '../records/user.record';
 import { StudentRecord } from '../records/student.record';
 import { StudentImport } from '../types';
 import { sendEmail } from '../utils/sendEmail';
-import { emailToHrRegister } from '../utils/emails/email-register-hr';
 import { emailToStudentRegister } from '../utils/emails/email-register-student';
 import { emailAttachment } from '../utils/emails/email-attachment';
 
 export const uploadRouter = Router();
 
 uploadRouter.post('/', async (req, res) => {
-  if (!req.files) {
-    throw new ValidationError('Nie przesłano pliku !');
+  if (req.files === undefined || req.files === null) {
+    throw new ValidationError(' Nie przesłano żadnego pliku !');
   }
-
   const [data] = Object.entries(req.files);
   const primaryData: any = data[1];
 

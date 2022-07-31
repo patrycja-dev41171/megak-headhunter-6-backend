@@ -7,26 +7,26 @@ import { pool } from '../utils/db';
 type StudentRecordResult = [StudentEntityImport[], FieldPacket[]];
 
 export class StudentRecord implements StudentEntity {
-  id?: string;
+  id: string;
   user_id: string;
   email: string;
-  courseCompletion: number;
-  courseEngagement: number;
-  projectDegree: number;
-  teamProjectDegree: number;
-  bonusProjectUrls: string;
+  courseCompletion?: number;
+  courseEngagement?: number;
+  projectDegree?: number;
+  teamProjectDegree?: number;
+  bonusProjectUrls?: string;
   tel?: number;
   firstName?: string;
   lastName?: string;
   githubUserName?: string;
-  portfolioUrls?: string[];
-  projectUrls?: string[];
+  portfolioUrls?: string;
+  projectUrls?: string;
   bio?: string;
   expectedTypeWork?: ExpectedTypeWork;
   targetWorkCity?: string;
   expectedContractType?: ExpectedContractType;
   expectedSalary?: number;
-  canTakeApprenticeship?: boolean;
+  canTakeApprenticeship?: number;
   monthsOfCommercialExp?: number;
   education?: string;
   workExperience?: string;
@@ -41,25 +41,25 @@ export class StudentRecord implements StudentEntity {
     if (typeof obj.email !== 'string') {
       throw new ValidationError('The format of the entered data is incorrect.');
     }
-    if (!obj.courseCompletion || obj.courseCompletion > 5 || obj.courseCompletion < 0) {
+    if (obj.courseCompletion > 5 || obj.courseCompletion < 0) {
       throw new ValidationError('Course completion grade cannot be empty and must be in the range og 0 to 5');
     }
     if (typeof obj.courseCompletion !== 'number') {
       throw new ValidationError('The format of the entered data is incorrect.');
     }
-    if (!obj.courseEngagement || obj.courseEngagement > 5 || obj.courseEngagement < 0) {
+    if (obj.courseEngagement > 5 || obj.courseEngagement < 0) {
       throw new ValidationError('Course engagement grade cannot be empty and must be in the range og 0 to 5');
     }
     if (typeof obj.courseEngagement !== 'number') {
       throw new ValidationError('The format of the entered data is incorrect.');
     }
-    if (!obj.projectDegree || obj.projectDegree > 5 || obj.projectDegree < 0) {
+    if (obj.projectDegree > 5 || obj.projectDegree < 0) {
       throw new ValidationError('Project degree cannot be empty and must be in the range og 0 to 5');
     }
     if (typeof obj.projectDegree !== 'number') {
       throw new ValidationError('The format of the entered data is incorrect.');
     }
-    if (!obj.teamProjectDegree || obj.teamProjectDegree > 5 || obj.teamProjectDegree < 0) {
+    if (obj.teamProjectDegree > 5 || obj.teamProjectDegree < 0) {
       throw new ValidationError('Team project degree cannot be empty and must be in the range og 0 to 5');
     }
     if (typeof obj.teamProjectDegree !== 'number') {
@@ -68,67 +68,71 @@ export class StudentRecord implements StudentEntity {
     if (!obj.bonusProjectUrls) {
       throw new ValidationError('Bonus project urls array cannot be empty');
     }
-    // if (!obj.firstName || obj.firstName.length > 50) {
-    //   throw new ValidationError('Firstname cannot be empty and cannot exceed 50 characters.');
-    // }
-    // if (typeof obj.firstName !== 'string') {
-    //   throw new ValidationError('The format of the entered data is incorrect.');
-    // }
-    // if (!obj.lastName || obj.lastName.length > 50) {
-    //   throw new ValidationError('Lastname cannot be empty and cannot exceed 50 characters.');
-    // }
-    // if (typeof obj.lastName !== 'string') {
-    //   throw new ValidationError('The format of the entered data is incorrect.');
-    // }
-    // if (!obj.githubUserName || obj.githubUserName.length > 100) {
-    //   throw new ValidationError('Github user name cannot be empty and cannot exceed 100 characters.');
-    // }
-    // if (typeof obj.githubUserName !== 'string') {
-    //   throw new ValidationError('The format of the entered data is incorrect.');
-    // }
-    //
-    // if (!obj.projectUrls) {
-    //   throw new ValidationError('Project urls cannot be empty.');
-    // }
-    // if (!Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork)) {
-    //   throw new ValidationError('Expected type work has to be one of the enum ExpectedTypeWork options');
-    // }
-    // if (!Object.values(ExpectedContractType).includes(obj.expectedContractType)) {
-    //   throw new ValidationError('Expected contract type has to be one of the enum ExpectedContractType options');
-    // }
-    // if (!Object.values(Status).includes(obj.status)) {
-    //   throw new ValidationError('Status has to be one of the enum Status options');
-    // }
-    // if (!obj.monthsOfCommercialExp || obj.monthsOfCommercialExp > 0) {
-    //   throw new ValidationError('MonthsOfCommercialExperience cannot be empty and must be greater than 0.');
-    // }
+    if (obj.firstName !== undefined && obj.firstName !== null && obj.firstName.length > 50) {
+      throw new ValidationError('Firstname cannot be empty and cannot exceed 50 characters.');
+    }
+    if (obj.firstName !== undefined && obj.firstName !== null && typeof obj.firstName !== 'string') {
+      throw new ValidationError('The format of the entered data is incorrect.');
+    }
+    if (obj.lastName !== undefined && obj.lastName !== null && obj.lastName.length > 50) {
+      throw new ValidationError('Lastname  exceed 50 characters.');
+    }
+    if (obj.lastName !== undefined && obj.lastName !== null && typeof obj.lastName !== 'string') {
+      throw new ValidationError('The format of the entered data is incorrect.');
+    }
+    if (obj.githubUserName !== undefined && obj.githubUserName !== null && obj.githubUserName.length > 100) {
+      throw new ValidationError('Github user name  cannot exceed 100 characters.');
+    }
+    if (obj.githubUserName !== undefined && obj.githubUserName !== null && typeof obj.githubUserName !== 'string') {
+      throw new ValidationError('The format of the entered data is incorrect.');
+    }
+    if (
+      obj.expectedTypeWork !== undefined &&
+      obj.expectedTypeWork !== null &&
+      !Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork)
+    ) {
+      throw new ValidationError('Expected type work has to be one of the enum ExpectedTypeWork options');
+    }
+    if (
+      obj.expectedContractType !== undefined &&
+      obj.expectedContractType !== null &&
+      !Object.values(ExpectedContractType).includes(obj.expectedContractType)
+    ) {
+      throw new ValidationError('Expected contract type has to be one of the enum ExpectedContractType options');
+    }
+    if (obj.status !== undefined && obj.status !== null && !Object.values(Status).includes(obj.status)) {
+      throw new ValidationError('Status has to be one of the enum Status options');
+    }
+    if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
+      throw new ValidationError('MonthsOfCommercialExperience  must be greater than 0.');
+    }
 
-    this.id = obj.id;
-    this.email = obj.email;
-    this.courseEngagement = obj.courseEngagement;
-    this.projectDegree = obj.projectDegree;
-    this.courseCompletion = obj.courseCompletion;
-    this.teamProjectDegree = obj.teamProjectDegree;
-    this.bonusProjectUrls = obj.bonusProjectUrls;
-    this.tel = obj.tel;
-    this.firstName = obj.firstName;
-    this.lastName = obj.lastName;
-    this.githubUserName = obj.githubUserName;
-    this.portfolioUrls = obj.portfolioUrls;
-    this.projectUrls = obj.projectUrls;
-    this.bio = obj.bio;
-    this.expectedTypeWork = obj.expectedTypeWork;
-    this.targetWorkCity = obj.targetWorkCity;
-    this.expectedContractType = obj.expectedContractType;
-    this.expectedSalary = obj.expectedSalary;
-    this.canTakeApprenticeship = obj.canTakeApprenticeship;
-    this.monthsOfCommercialExp = obj.monthsOfCommercialExp;
+    this.id = obj.id ?? null;
+    this.email = obj.email ?? null;
+    this.courseEngagement = obj.courseEngagement ?? null;
+    this.projectDegree = obj.projectDegree ?? null;
+    this.courseCompletion = obj.courseCompletion ?? null;
+    this.teamProjectDegree = obj.teamProjectDegree ?? null;
+    this.bonusProjectUrls = obj.bonusProjectUrls ?? null;
+    this.tel = obj.tel ?? null;
+    this.firstName = obj.firstName ?? null;
+    this.lastName = obj.lastName ?? null;
+    this.githubUserName = obj.githubUserName ?? null;
+    this.portfolioUrls = obj.portfolioUrls ?? null;
+    this.projectUrls = obj.projectUrls ?? null;
+    this.bio = obj.bio ?? null;
+    this.expectedTypeWork = obj.expectedTypeWork ?? null;
+    this.targetWorkCity = obj.targetWorkCity ?? null;
+    this.expectedContractType = obj.expectedContractType ?? null;
+    this.expectedSalary = obj.expectedSalary ?? null;
+    this.canTakeApprenticeship = obj.canTakeApprenticeship ?? null;
+    this.monthsOfCommercialExp = obj.monthsOfCommercialExp ?? null;
     this.education = obj.education ?? null;
-    this.workExperience = obj.workExperience;
-    this.courses = obj.courses;
-    this.status = obj.status;
-    this.user_id = obj.user_id;
-    this.hr_id = obj.hr_id;
+    this.workExperience = obj.workExperience ?? null;
+    this.courses = obj.courses ?? null;
+    this.status = obj.status ?? null;
+    this.user_id = obj.user_id ?? null;
+    this.hr_id = obj.hr_id ?? null;
   }
 
   async insert(): Promise<void> {
@@ -154,7 +158,7 @@ export class StudentRecord implements StudentEntity {
 
   async update(): Promise<void> {
     await pool.execute(
-      'UPDATE `student` SET `tel` = :tel, `lastName` = :lastName, `firstName` = :firstName, `githubUserName` = :githubUserName, `portfolioUrls` = :portfolioUrls, `projectUrls` = :projectUrls, `bio` = :bio, `expectedTypeWork` = :expectedTypeWork, `targetWorkCity` = :targetWorkCity, `expectedContractType` = :expectedContractType, `expectedSalary` = :expectedSalary, `canTakeApprenticeship` = :canTakeApprenticeship, `monthsOfCommercialExp` = :monthsOfCommercialExp, `education` = :education, `workExperience` = :workExperience, `courses` = :courses, `status` = :status, `user_id` = :user_id, `hr_id` = :hr_id WHERE `id` = :id',
+      'UPDATE `student` SET `tel` = :tel, `lastName` = :lastName, `firstName` = :firstName, `githubUserName` = :githubUserName, `portfolioUrls` = :portfolioUrls, `projectUrls` = :projectUrls, `bio` = :bio, `expectedTypeWork` = :expectedTypeWork, `targetWorkCity` = :targetWorkCity, `expectedContractType` = :expectedContractType, `expectedSalary` = :expectedSalary, `canTakeApprenticeship` = :canTakeApprenticeship, `monthsOfCommercialExp` = :monthsOfCommercialExp, `education` = :education, `workExperience` = :workExperience, `courses` = :courses ,`status` = :status  WHERE `email` = :email',
       {
         id: this.id,
         tel: this.tel,
@@ -174,9 +178,15 @@ export class StudentRecord implements StudentEntity {
         workExperience: this.workExperience,
         courses: this.courses,
         status: this.status,
-        user_id: this.user_id,
-        hr_id: this.hr_id,
+        email: this.email,
       }
     );
+  }
+
+  static async getOneByEmail(email: string): Promise<StudentEntity> {
+    const [results] = (await pool.execute('SELECT * FROM `student` WHERE `email` = :email', {
+      email,
+    })) as StudentRecordResult;
+    return results.length === 0 ? null : new StudentRecord(results[0]);
   }
 }
