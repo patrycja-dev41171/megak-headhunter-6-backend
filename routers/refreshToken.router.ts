@@ -6,7 +6,7 @@ import { UserRecord } from '../records/user.record';
 
 export const refreshTokenRouter = Router().get('/', async (req, res) => {
   const refreshToken: string = req.cookies.refreshToken;
-
+  console.log(refreshToken)
   if (!refreshToken) {
     throw new ValidationError('Invalid refreshToken.');
   }
@@ -30,6 +30,7 @@ export const refreshTokenRouter = Router().get('/', async (req, res) => {
       res.json({
         accessToken: accessToken,
         id: user.id,
+        role: user.role,
       });
     } catch (err) {
       throw new ValidationError('Error refreshing tokens.');
