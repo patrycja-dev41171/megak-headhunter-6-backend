@@ -15,16 +15,16 @@ export class UserRecord implements UserEntity {
 
   constructor(obj: UserEntity) {
     if (!obj.email || obj.email.length > 255) {
-      throw new ValidationError('Email cannot be empty and cannot exceed 255 characters.');
+      throw new ValidationError('Pole Email nie może być puste oraz zawierać więcej niż 255 znaków !.');
     }
     if (typeof obj.email !== 'string') {
-      throw new ValidationError('The format of the entered data is incorrect.');
+      throw new ValidationError('Format danych pola E-mail jest nieprawdiłowy !.');
     }
     if (!obj.role) {
-      throw new ValidationError('Role cannot be empty.');
+      throw new ValidationError('Pole Role nie może być puste !.');
     }
     if (obj.password !== null && obj.password !== undefined && obj.password.length > 255) {
-      throw new ValidationError('Password cannot be empty and cannot exceed 255 characters.');
+      throw new ValidationError('Pole Hasło nie może być puste oraz zawierać więcej niż 255 znaków !.');
     }
 
     this.id = obj.id ?? uuid();

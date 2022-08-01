@@ -15,16 +15,16 @@ export class LoginRecord implements Login {
 
   constructor(obj: Login) {
     if (!obj.user_id) {
-      throw new ValidationError('User_id cannot be empty.');
+      throw new ValidationError('Pole User_id nie może być puste !.');
     }
     if (typeof obj.user_id !== 'string') {
-      throw new ValidationError('User_id must be string.');
+      throw new ValidationError('Pole User_id musi być tekstem !.');
     }
     if (!obj.refreshToken) {
-      throw new ValidationError('RefreshToken cannot be empty.');
+      throw new ValidationError('Pole refreshToken nie może być puste !.');
     }
     if (typeof obj.refreshToken !== 'string') {
-      throw new ValidationError('RefreshToken must be string.');
+      throw new ValidationError('Pole RefreshToken musi być tekstem !.');
     }
 
     this.id = obj.id ?? uuid();

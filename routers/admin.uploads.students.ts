@@ -89,7 +89,7 @@ uploadRouter.post('/', async (req, res) => {
       `${
         info
           ? `Dodano  łącznie:  ${peoplesCount} studentów`
-          : `Dodano ${peoplesCount} uzytkowników ponieważ dani uzytkownicy znajdują się już w bazie`
+          : `Dodano ${peoplesCount} użytkowników ponieważ dani użytkownicy znajdują się już w bazie`
       }`
     );
   countPeoples.length = 0;

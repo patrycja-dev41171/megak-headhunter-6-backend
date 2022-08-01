@@ -11,11 +11,11 @@ export const registerRouter = Router().post('/:id/:registerToken', async (req, r
   const { password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
-    throw new ValidationError('Invalid data.');
+    throw new ValidationError('Niepoprawne dane !.');
   }
   const user = await UserRecord.getOneById(id);
   if (!user) {
-    throw new Error('User does not exist.');
+    throw new Error('Użytkownik nie istnieje !.');
   }
 
   const hash = hashPassword(password);
@@ -28,10 +28,8 @@ export const registerRouter = Router().post('/:id/:registerToken', async (req, r
     const html = emailCorrectRegistration(user.email);
     sendEmail(user.email, 'MegaK - HeadHunter#6', html, attachment);
   } catch (err) {
-    throw new ValidationError('Cannot register user in database.');
+    throw new ValidationError('Nie można zarejestrować użytkownika !.');
   }
 
-  res.json({
-    message: 'Użytkownik zarejestrowany w systemie.',
-  });
+  res.json('Użytkownik zarejestrowany pomyślnie !.');
 });
