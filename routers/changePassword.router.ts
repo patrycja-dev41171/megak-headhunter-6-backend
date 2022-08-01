@@ -11,12 +11,12 @@ export const changePasswordRouter = Router().post('/:id', async (req, res) => {
   const { id } = req.params;
 
   if (password !== confirmPassword) {
-    throw new ValidationError('Passwords do not match.');
+    throw new ValidationError('Hasło nie jest zgodne !.');
   }
   const user = await UserRecord.getOneById(id);
 
   if (!user) {
-    throw new ValidationError('User does not exist.');
+    throw new ValidationError('Użytkownik nie istnieje !.');
   }
   const newPassword = hashPassword(password);
 
@@ -26,10 +26,10 @@ export const changePasswordRouter = Router().post('/:id', async (req, res) => {
     const html = emailCorrectChangePassword(user.email);
     sendEmail(user.email, 'MegaK - HeadHunter#6', html, attachment);
   } catch (err) {
-    throw new ValidationError('Cannot change password');
+    throw new ValidationError('Nie można zmienić hasła !.');
   }
 
   res.json({
-    message: 'Password has been changed.',
+    message: 'Hasło zostało zmienione pomyślnie !.',
   });
 });

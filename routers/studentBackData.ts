@@ -71,7 +71,6 @@ studentBackRouter.post('/', async (req, res) => {
   };
 
   const studentDb = await StudentRecord.getOneByEmail(email);
-  // if(studentDb.firstName)
   if (!studentDb) {
     throw new ValidationError(
       'Nie możesz zaktualizować danych ponieważ twoje konto z twoim emailem nie jest wpisane do naszej bazy danych, skontaktuj się z administracją w celu dalszej pomocy.'
@@ -79,6 +78,7 @@ studentBackRouter.post('/', async (req, res) => {
   }
   const response = await fetch(`https://api.github.com/users/${githubUserName}`);
   const data = await response.json();
+  console.log(data);
 
   const studentFront = new StudentRecord({
     ...studentDb,

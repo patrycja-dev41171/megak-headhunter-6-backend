@@ -6,15 +6,15 @@ import { UserRecord } from '../records/user.record';
 
 export const refreshTokenRouter = Router().get('/', async (req, res) => {
   const refreshToken: string = req.cookies.refreshToken;
-  console.log(refreshToken)
+  console.log(refreshToken);
   if (!refreshToken) {
-    throw new ValidationError('Invalid refreshToken.');
+    throw new ValidationError('Nieważny token odświeżający !.');
   }
 
   const result = await LoginRecord.getOneByToken(refreshToken);
   if (!result) {
     res.clearCookie('refreshToken');
-    throw new ValidationError('No login details in the database.');
+    throw new ValidationError('Brak danych logowania w bazie danych !.');
   }
 
   const user = await UserRecord.getOneById(result.user_id);
@@ -22,7 +22,7 @@ export const refreshTokenRouter = Router().get('/', async (req, res) => {
   jwt.verify(refreshToken, process.env.ACCESS_REFRESH_TOKEN_KEY, err => {
     if (err) {
       res.clearCookie('refreshToken');
-      throw new ValidationError('Invalid refreshToken verification.');
+      throw new ValidationError('Nieprawidłowa weryfikacja tokena odświeżającego  !.');
     }
 
     try {
@@ -33,7 +33,7 @@ export const refreshTokenRouter = Router().get('/', async (req, res) => {
         role: user.role,
       });
     } catch (err) {
-      throw new ValidationError('Error refreshing tokens.');
+      throw new ValidationError('Wystąpił błąd podczas odświeżania tokenu odświeżającego !. ');
     }
   });
 });
