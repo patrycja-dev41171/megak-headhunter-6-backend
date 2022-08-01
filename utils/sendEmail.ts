@@ -28,10 +28,3 @@ export const sendEmail = (to: string, subject: string, html: string, attachments
     });
 };
 
-//Przykład attachment :
-//
-// const obrazek = [{
-//     filename:'unique@kreata.jpg',
-//     path:'./utils/unique@kreata.jpg',
-//     cid: 'unique@kreata.jpg'
-// }]

@@ -7,8 +7,7 @@ import { pool } from '../utils/db';
 type StudentRecordResult = [StudentEntityImport[], FieldPacket[]];
 
 export class StudentRecord implements StudentEntity {
-  id: string;
-  user_id: string;
+  id?: string;
   email: string;
   courseCompletion?: number;
   courseEngagement?: number;
@@ -32,79 +31,80 @@ export class StudentRecord implements StudentEntity {
   workExperience?: string;
   courses?: string;
   status?: Status;
+  user_id: string;
   hr_id?: string;
 
   constructor(obj: StudentEntity) {
     if (!obj.email || obj.email.length > 255) {
-      throw new ValidationError('Pole Email nie może być puste oraz zawierać więcej niż 255 znaków !.');
+      throw new ValidationError('Pole Email nie może być puste oraz zawierać więcej niż 255 znaków!');
     }
     if (typeof obj.email !== 'string') {
-      throw new ValidationError('Format danych pola: E-mail jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: E-mail jest nieprawidłowy!');
     }
     if (!obj.courseCompletion || obj.courseCompletion > 5 || obj.courseCompletion < 0) {
-      throw new ValidationError('Pole Ukończenie kursu nie może być puste oraz musi zawierać się w przedziale od 0 do 5 !.');
+      throw new ValidationError('Pole Ukończenie kursu nie może być puste oraz musi zawierać się w przedziale od 0 do 5!');
     }
     if (typeof obj.courseCompletion !== 'number') {
-      throw new ValidationError('Format danych pola: Ukończenie kursu jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: Ukończenie kursu jest nieprawidłowy!');
     }
     if (!obj.courseEngagement || obj.courseEngagement > 5 || obj.courseEngagement < 0) {
-      throw new ValidationError('Pole Zaangażowanie w kursie nie może być puste oraz  musi zawierać się w przedziale od 0 do 5 !.');
+      throw new ValidationError('Pole Zaangażowanie w kursie nie może być puste oraz  musi zawierać się w przedziale od 0 do 5!');
     }
     if (typeof obj.courseEngagement !== 'number') {
       throw new ValidationError('Format danych pola: Zaangażowanie w kursie jest nieprawidłowy !.');
     }
     if (!obj.projectDegree || obj.projectDegree > 5 || obj.projectDegree < 0) {
-      throw new ValidationError('Pole Stopień projektowy nie może być puste oraz  musi zawierać się w przedziale od 0 do 5 !.');
+      throw new ValidationError('Pole Stopień projektowy nie może być puste oraz  musi zawierać się w przedziale od 0 do 5!');
     }
     if (typeof obj.projectDegree !== 'number') {
-      throw new ValidationError('Format danych pola: Stopień projektowy  jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: Stopień projektowy  jest nieprawidłowy!');
     }
     if (!obj.teamProjectDegree || obj.teamProjectDegree > 5 || obj.teamProjectDegree < 0) {
-      throw new ValidationError('Pole Zespołowy stopień projektowy nie może być puste oraz  musi zawierać się w przedziale od 0 do 5 !.');
+      throw new ValidationError('Pole Zespołowy stopień projektowy nie może być puste oraz  musi zawierać się w przedziale od 0 do 5!');
     }
     if (typeof obj.teamProjectDegree !== 'number') {
-      throw new ValidationError('Format danych pola: Zespołowy stopień projektowy  jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: Zespołowy stopień projektowy  jest nieprawidłowy!');
     }
     if (!obj.bonusProjectUrls) {
-      throw new ValidationError('Pole Projekt bonusowy nie może być puste !.');
+      throw new ValidationError('Pole Projekt bonusowy nie może być puste!');
     }
     if (obj.firstName !== undefined && obj.firstName !== null && obj.firstName.length > 50) {
-      throw new ValidationError('Pole Imię nie może przekracać 50 znaków !.');
+      throw new ValidationError('Pole Imię nie może przekracać 50 znaków!');
     }
     if (obj.firstName !== undefined && obj.firstName !== null && typeof obj.firstName !== 'string') {
-      throw new ValidationError('Format danych pola: Imię  jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: Imię  jest nieprawidłowy!');
     }
     if (obj.lastName !== undefined && obj.lastName !== null && obj.lastName.length > 50) {
-      throw new ValidationError('Pole Nazwisko nie może przekracać 50 znaków !.');
+      throw new ValidationError('Pole Nazwisko nie może przekracać 50 znaków!');
     }
     if (obj.lastName !== undefined && obj.lastName !== null && typeof obj.lastName !== 'string') {
-      throw new ValidationError('Format danych pola: Nazwisko  jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: Nazwisko  jest nieprawidłowy!');
     }
     if (obj.githubUserName !== undefined && obj.githubUserName !== null && obj.githubUserName.length > 100) {
-      throw new ValidationError('Pole Github login nie może przekracać 100 znaków !.');
+      throw new ValidationError('Pole Github login nie może przekracać 100 znaków!');
     }
     if (obj.githubUserName !== undefined && obj.githubUserName !== null && typeof obj.githubUserName !== 'string') {
-      throw new ValidationError('Format danych pola: Github login  jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola: Github login  jest nieprawidłowy!');
     }
     if (
       obj.expectedTypeWork !== undefined &&
       obj.expectedTypeWork !== null &&
       !Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork)
     ) {
-      throw new ValidationError('Oczekiwana wartość jest niepoprawna !.');
+      throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (
       obj.expectedContractType !== undefined &&
       obj.expectedContractType !== null &&
       !Object.values(ExpectedContractType).includes(obj.expectedContractType)
     ) {
-      throw new ValidationError('Oczekiwana wartość jest niepoprawna !.');
+      throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (obj.status !== undefined && obj.status !== null && !Object.values(Status).includes(obj.status)) {
-      throw new ValidationError('Oczekiwana wartość jest niepoprawna !.');
+      throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
-      throw new ValidationError('Pole Miesięczne doświadczenie komercyjne musi być większe od 0 !.');
+      throw new ValidationError('Pole Miesięczne doświadczenie komercyjne musi być większe od 0!');
     }
 
     this.id = obj.id ?? null;
@@ -138,8 +138,6 @@ export class StudentRecord implements StudentEntity {
   async insert(): Promise<void> {
     if (!this.id) {
       this.id = uuid();
-    } else {
-      throw new ValidationError('Nie można dodać studenta który już istnieje !.');
     }
     const [results] = (await pool.execute(
       'INSERT INTO `student` (`id`, `email`,`courseCompletion`, `courseEngagement`, `projectDegree`, `teamProjectDegree`, `bonusProjectUrls`,`user_id`) VALUES (:id,:email, :courseCompletion, :courseEngagement, :projectDegree, :teamProjectDegree, :bonusProjectUrls, :user_id)',

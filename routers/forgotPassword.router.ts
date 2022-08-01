@@ -14,12 +14,12 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
   const { email, confirmEmail } = req.body;
 
   if (email !== confirmEmail) {
-    throw new ValidationError('Nieprawidłowe dane !.');
+    throw new ValidationError('Nieprawidłowe dane!');
   }
 
   const data = await UserRecord.getOneByEmail(email);
   if (!data) {
-    throw new ValidationError('Użytkownik o takim E-mailu nie istnieje !.');
+    throw new ValidationError('Użytkownik o takim emailu nie istnieje!');
   }
 
   const link = `http://localhost:3000/change-password/:${data.id}`;
@@ -54,7 +54,7 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
       sendEmail(student.email, 'MegaK - HeadHunter#6', html, attachment);
     }
   } catch (err) {
-    throw new ValidationError('Wystąpił problem przy próbie wysłania e-maila !.');
+    throw new ValidationError('Wystąpił problem przy próbie wysłania e-maila!');
   }
-  res.json('Email został wysłany pomyślnie !.').status(200);
+  res.json('Email został wysłany pomyślnie!').status(200);
 });

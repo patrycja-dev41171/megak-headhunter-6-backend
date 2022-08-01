@@ -15,16 +15,16 @@ hrRouter.post('/', async (req, res) => {
   };
 
   if (!user.email) {
-    throw new ValidationError('Email jest wymagany');
+    throw new ValidationError('Email jest wymagany!');
   }
   if (await UserRecord.getOneByEmail(req.body.email)) {
-    throw new ValidationError('Uzytkownik o takim Emailu juz istnieje !');
+    throw new ValidationError('Użytkownik o takim emailu juz istnieje!');
   }
   const addUser = new UserRecord(user);
   const tokenRegister = await addUser.insert();
 
   if (!req.body.fullName || !req.body.company || !req.body.maxReservedStudents) {
-    throw new ValidationError('Nie podano wszystkich informacji !');
+    throw new ValidationError('Nie podano wszystkich informacji!');
   }
 
   const hr = {

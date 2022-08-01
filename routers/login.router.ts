@@ -9,18 +9,18 @@ export const loginRouter = Router()
     const { email, password } = req.body;
     const user = await UserRecord.getOneByEmail(email);
     if (!user) {
-      throw new ValidationError('Niepoprawne dane logowania !.');
+      throw new ValidationError('Niepoprawne dane logowania!');
     }
     if (user.registerToken !== null) {
-      throw new ValidationError('Użytkownik znajduje w bazie danych ale nie dokończył etapu rejestracji !.');
+      throw new ValidationError('Użytkownik znajduje w bazie danych, ale nie dokończył etapu rejestracji!');
     }
     if (req.cookies.refreshToken !== undefined && (await LoginRecord.getOneByToken(req.cookies.refreshToken))) {
-      throw new ValidationError('Użytkownik jest już zalogowany !.');
+      throw new ValidationError('Użytkownik jest już zalogowany!');
     }
 
     const isCorrect = isPasswordCorrect(password, user.password);
     if (!isCorrect) {
-      throw new ValidationError('Niepoprawne dane logowania !.');
+      throw new ValidationError('Niepoprawne dane logowania!');
     }
 
     try {
@@ -41,20 +41,21 @@ export const loginRouter = Router()
           role: user.role,
         });
     } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika ! , spróbuj ponownie pózniej');
+      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie' +
+          ' pózniej.');
     }
   })
 
   .delete('/', async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      throw new ValidationError('Użytkownik nie może być wylogowany !.');
+      throw new ValidationError('Użytkownik nie może być wylogowany!');
     }
     try {
       await LoginRecord.getOneByToken(refreshToken);
       await LoginRecord.deleteOneByToken(refreshToken);
-      res.clearCookie(refreshToken).json('Użytkownik został wylogowany pomyślnie !.');
+      res.clearCookie(refreshToken).json('Użytkownik został pomyślnie wylogowany!');
     } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas wylogowania z aplikacji !.');
+      throw new ValidationError('Wystąpił błąd podczas wylogowania z aplikacji!');
     }
   });

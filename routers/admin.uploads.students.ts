@@ -11,13 +11,13 @@ export const uploadRouter = Router();
 
 uploadRouter.post('/', async (req, res) => {
   if (req.files === undefined || req.files === null) {
-    throw new ValidationError(' Nie przesłano żadnego pliku !');
+    throw new ValidationError(' Nie przesłano żadnego pliku!');
   }
   const [data] = Object.entries(req.files);
   const primaryData: any = data[1];
 
   if (primaryData.mimetype !== 'application/json') {
-    throw new ValidationError('Plik musi być w formacie JSON !');
+    throw new ValidationError('Plik musi być w formacie JSON!');
   }
 
   const parseData = JSON.parse(primaryData.data);
@@ -25,7 +25,7 @@ uploadRouter.post('/', async (req, res) => {
 
   const validateData = parseData.map((el: StudentImport) => {
     if (!emailValidate.test(el.email)) {
-      throw new ValidationError(`Dane z pliku są nieprawidłowe, email: ${el.email} musi zawierać @, popraw dane i spróbuj ponownie`);
+      throw new ValidationError(`Dane z pliku są nieprawidłowe, email: ${el.email} musi zawierać @, popraw dane i spróbuj ponownie.`);
     } else {
       return el;
     }
@@ -37,7 +37,7 @@ uploadRouter.post('/', async (req, res) => {
     const { email, courseCompletion, courseEngagement, projectDegree, teamProjectDegree, bonusProjectUrls } = importStudent;
 
     if (!email || !courseCompletion || !courseEngagement || !projectDegree || !teamProjectDegree || !bonusProjectUrls) {
-      throw new ValidationError('Wystąpił błąd sprawdz strukture pliku i spróbuj ponownie !');
+      throw new ValidationError('Wystąpił błąd. Sprawdź strukturę pliku i spróbuj ponownie!');
     }
 
     const addUser = async () => {
@@ -88,11 +88,9 @@ uploadRouter.post('/', async (req, res) => {
     .json(
       `${
         info
-          ? `Dodano  łącznie:  ${peoplesCount} studentów`
-          : `Dodano ${peoplesCount} użytkowników ponieważ dani użytkownicy znajdują się już w bazie`
+          ? `Dodano  łącznie:  ${peoplesCount} studentów.`
+          : `Dodano tylko ${peoplesCount} użytkowników, ponieważ reszta znajduje się już w bazie.`
       }`
     );
   countPeoples.length = 0;
-
-  // pozostało dodanie emaila !;
 });

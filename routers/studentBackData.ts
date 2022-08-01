@@ -42,7 +42,7 @@ studentBackRouter.post('/', async (req, res) => {
     !monthsOfCommercialExp ||
     !status
   ) {
-    throw new ValidationError(' Nie wprowadzono wszystkich wymaganych informacji !');
+    throw new ValidationError('Nie wprowadzono wszystkich wymaganych informacji!');
   }
 
   // projectUrlsFront nie jest wymagana informacja na frondzie ejsli ja dostane to oznacza to ze ktos podal link do frontu tez do projektu zalcizeniowego a jesli nie to bd tylko link do back-endu poniewaz on  jest wymagany.
@@ -73,7 +73,8 @@ studentBackRouter.post('/', async (req, res) => {
   const studentDb = await StudentRecord.getOneByEmail(email);
   if (!studentDb) {
     throw new ValidationError(
-      'Nie możesz zaktualizować danych ponieważ twoje konto z twoim emailem nie jest wpisane do naszej bazy danych, skontaktuj się z administracją w celu dalszej pomocy.'
+      'Nie możesz zaktualizować danych, ponieważ konto z takim emailem nie istnieje. Skontaktuj' +
+        ' się z administracją w celu dalszej pomocy.'
     );
   }
   const response = await fetch(`https://api.github.com/users/${githubUserName}`);
@@ -87,10 +88,10 @@ studentBackRouter.post('/', async (req, res) => {
 
   if (!data.message) {
     await studentFront.update();
-    res.status(200).json('Zaktualizowano dane ');
+    res.status(200).json('Zaktualizowano dane.');
   } else {
     throw new ValidationError(
-      `Użytkownik o takim  loginie:  ${studentData.githubUserName}  nie istnieje na githubie ! ,sprawdz login i spróbuj ponownie wpisać poprawny login z github. `
+      `Użytkownik o takim  loginie:  ${studentData.githubUserName} nie posiada konta na github! Sprawdź login i spróbuj ponownie. `
     );
   }
 });

@@ -6,7 +6,7 @@ export const hashPassword = (password: string): string => {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
   } catch (error) {
-    throw new ValidationError('Problem with password hashing.');
+    throw new ValidationError('Problem z hashowaniem hasła.');
   }
 };
 
@@ -14,7 +14,7 @@ export const isPasswordCorrect = (passwordEntered: string, hashedPassword: strin
   try {
     return bcrypt.compareSync(passwordEntered, hashedPassword);
   } catch (error) {
-    throw new ValidationError('Problem with comparing passwords.');
+    throw new ValidationError('Problem z porównywaniem haseł.');
   }
   return false;
 };

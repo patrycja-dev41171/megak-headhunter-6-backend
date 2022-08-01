@@ -17,31 +17,31 @@ export class HrRecord implements HrEntity {
 
   constructor(obj: HrEntity) {
     if (!obj.user_id) {
-      throw new ValidationError(' Pole User_id nie może być puste !.');
+      throw new ValidationError(' Pole User_id nie może być puste!');
     }
     if (!obj.email || obj.email.length > 255) {
-      throw new ValidationError('Pole e-mail nie może być puste oraz nie może przekracać 255 znaków !.');
+      throw new ValidationError('Pole e-mail nie może być puste oraz nie może przekracać 255 znaków!');
     }
     if (typeof obj.email !== 'string') {
-      throw new ValidationError('Format danych pola E-mail jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola E-mail jest nieprawidłowy!');
     }
     if (!obj.fullName || obj.fullName.length > 50) {
-      throw new ValidationError('Pole Imię nie może być puste oraz przekracać 50 znaków !. ');
+      throw new ValidationError('Pole Imię nie może być puste oraz przekracać 50 znaków!');
     }
     if (typeof obj.fullName !== 'string') {
-      throw new ValidationError('Format danych pola Imię jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola Imię jest nieprawidłowy!');
     }
     if (!obj.company || obj.company.length > 120) {
-      throw new ValidationError('Pole Firma nie może być puste oraz nie może przekracać 120 znaków !.');
+      throw new ValidationError('Pole Firma nie może być puste oraz nie może przekracać 120 znaków!');
     }
     if (typeof obj.company !== 'string') {
-      throw new ValidationError('Format danych pola Firma jest nieprawidłowy !');
+      throw new ValidationError('Format danych pola Firma jest nieprawidłowy!');
     }
     if (!obj.maxReservedStudents || obj.maxReservedStudents > 999) {
-      throw new ValidationError('Pole Maksymalna liczba studentów nie może być puste oraz nie może przekracać 999 znaków !.');
+      throw new ValidationError('Pole Maksymalna liczba studentów nie może być puste oraz nie może przekracać 999 znaków!');
     }
     if (typeof obj.maxReservedStudents !== 'number') {
-      throw new ValidationError('Format danych pola Maksymalna liczba studentów jest nieprawidłowy !.');
+      throw new ValidationError('Format danych pola Maksymalna liczba studentów jest nieprawidłowy!');
     }
 
     this.id = obj.id ?? uuid();
