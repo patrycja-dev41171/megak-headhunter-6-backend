@@ -103,7 +103,7 @@ export class StudentRecord implements StudentEntity {
     if (obj.status !== undefined && obj.status !== null && !Object.values(Status).includes(obj.status)) {
       throw new ValidationError('Status has to be one of the enum Status options');
     }
-    if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp > 0) {
+    if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
       throw new ValidationError('MonthsOfCommercialExperience  must be greater than 0.');
     }
 
