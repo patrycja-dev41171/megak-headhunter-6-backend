@@ -42,7 +42,9 @@ export const forgotPasswordRouter = Router().post('/', async (req, res) => {
       sendEmail(hr.email, 'MegaK - HeadHunter#6', html, attachment);
     } else if (data.role === 'student') {
       const [results] = (await pool.execute(
-        'SELECT `user`.`id`, `user`.`email`, `user`.`role`, `student`.`firstname`,`student`.`lastname` FROM `student` INNER JOIN `user` ON `student`.`user_id`=`user`.`id`WHERE `student`.`email` = :email',
+        'SELECT `user`.`id`, `user`.`email`, `user`.`role`,' +
+          ' `student`.`firstName`,`student`.`lastName` FROM `student` INNER JOIN `user` ON' +
+          ' `student`.`user_id`=`user`.`id`WHERE `student`.`email` = :email',
         {
           email: data.email,
         }
