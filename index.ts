@@ -15,6 +15,7 @@ import { forgotPasswordRouter } from './routers/forgotPassword.router';
 import { changePasswordRouter } from './routers/changePassword.router';
 import { registerRouter } from './routers/register.router';
 import { studentBackRouter } from './routers/studentBackData';
+import { getStudentRouter } from './routers/get.student';
 import fileUpload = require('express-fileupload');
 
 const app = express();
@@ -55,6 +56,7 @@ app.use('/refresh-token', refreshTokenRouter);
 app.use('/forgot-password', forgotPasswordRouter);
 app.use('/change-password', changePasswordRouter);
 app.use('/studentBack', studentBackRouter);
+app.use('/student', getStudentRouter);
 
 app.use(handleError);
 

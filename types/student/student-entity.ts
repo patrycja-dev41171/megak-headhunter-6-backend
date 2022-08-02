@@ -29,6 +29,15 @@ export interface StudentImport {
   bonusProjectUrls: string;
 }
 
+export interface SingleStudentImport {
+  email: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  bonusProjectUrls: string;
+}
+
 export interface StudentEntityImport {
   id: string;
   email: string;
