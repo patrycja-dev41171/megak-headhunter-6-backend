@@ -15,7 +15,8 @@ import { forgotPasswordRouter } from './routers/forgotPassword.router';
 import { changePasswordRouter } from './routers/changePassword.router';
 import { registerRouter } from './routers/register.router';
 import { studentBackRouter } from './routers/studentBackData';
-import { getStudentRouter } from './routers/get.student';
+import { getStudentRouter } from './routers/getStudentImport';
+import { getStudentData } from './routers/getStudentData';
 import fileUpload = require('express-fileupload');
 import { envRouter } from './routers/env.router';
 
@@ -59,6 +60,9 @@ app.use('/change-password', changePasswordRouter);
 app.use('/studentBack', studentBackRouter);
 app.use('/student', getStudentRouter);
 app.use('/env', envRouter);
+app.use('/student/data', studentBackRouter); // zapisywanie  dokładnych danych o studencie w bazie danych !
+app.use('/student/import', getStudentRouter); // wyświetlanie jedynie danych z importu dla studenta.
+app.use('/oneStudent/', getStudentData); // wysyłanie wszystkich danych o jednym studencie na FE.
 
 app.use(handleError);
 

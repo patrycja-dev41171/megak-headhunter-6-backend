@@ -41,7 +41,7 @@ export const loginRouter = Router()
           role: user.role,
         });
     } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie pózniej.');
+      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie pózniej.')
     }
   })
 
@@ -53,7 +53,7 @@ export const loginRouter = Router()
     try {
       await LoginRecord.getOneByToken(refreshToken);
       await LoginRecord.deleteOneByToken(refreshToken);
-      res.clearCookie(refreshToken).json('Użytkownik został pomyślnie wylogowany!');
+      res.clearCookie('refreshToken').json('Użytkownik został pomyślnie wylogowany!');
     } catch (err) {
       throw new ValidationError('Wystąpił błąd podczas wylogowania z aplikacji!');
     }
