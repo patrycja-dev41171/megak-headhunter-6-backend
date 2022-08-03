@@ -79,7 +79,6 @@ studentBackRouter.post('/', async (req, res) => {
   }
   const response = await fetch(`https://api.github.com/users/${githubUserName}`);
   const data = await response.json();
-  console.log(data);
 
   const studentFront = new StudentRecord({
     ...studentDb,

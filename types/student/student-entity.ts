@@ -50,6 +50,11 @@ export interface StudentEntityImport {
 
 export interface studentEntityFront {
   email: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  bonusProjectUrls: string;
   tel: number | null;
   firstName: string | null;
   lastName: string | null;
