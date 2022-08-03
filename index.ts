@@ -7,7 +7,7 @@ import rateLimiter from 'express-rate-limit';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { handleError } from './utils/handleErrors';
-import { uploadRouter } from './routers/admin.uploads.students';
+import {adminRouter} from './routers/admin.router';
 import { loginRouter } from './routers/login.router';
 import { refreshTokenRouter } from './routers/refreshToken.router';
 import { hrRouter } from './routers/hr.router';
@@ -17,6 +17,7 @@ import { registerRouter } from './routers/register.router';
 import { studentBackRouter } from './routers/studentBackData';
 import { getStudentRouter } from './routers/get.student';
 import fileUpload = require('express-fileupload');
+import { envRouter } from './routers/env.router';
 
 const app = express();
 
@@ -48,8 +49,8 @@ app.use(morgan('common'));
 
 //routers
 
-app.use('/admin/upload/students', uploadRouter);
-app.use('/admin/add-hr', hrRouter);
+app.use('/admin', adminRouter);
+app.use('/hr', hrRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/refresh-token', refreshTokenRouter);
@@ -57,6 +58,7 @@ app.use('/forgot-password', forgotPasswordRouter);
 app.use('/change-password', changePasswordRouter);
 app.use('/studentBack', studentBackRouter);
 app.use('/student', getStudentRouter);
+app.use('/env', envRouter);
 
 app.use(handleError);
 

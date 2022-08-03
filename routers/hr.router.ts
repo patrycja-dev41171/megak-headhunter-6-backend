@@ -1,49 +1,25 @@
 import { Router } from 'express';
-import { ValidationError } from '../utils/handleErrors';
-import { UserRecord } from '../records/user.record';
 import { HrRecord } from '../records/hr.record';
-import { sendEmail } from '../utils/sendEmail';
-import { emailToHrRegister } from '../utils/emails/email-register-hr';
-import { emailAttachment } from '../utils/emails/email-attachment';
+import { ValidationError } from '../utils/handleErrors';
 
 export const hrRouter = Router();
 
-hrRouter.post('/', async (req, res) => {
-  const user = {
-    email: req.body.email,
-    role: 'hr',
-  };
-
-  if (!user.email) {
-    throw new ValidationError('Email jest wymagany!');
+hrRouter.post('/set/photo', async (req, res) => {
+  const { id, img_src } = req.body;
+  console.log(id, img_src);
+  if (!id || !img_src) {
+    throw new ValidationError('Brak odpowiednich danych.');
   }
-  if (await UserRecord.getOneByEmail(req.body.email)) {
-    throw new ValidationError('Użytkownik o takim emailu juz istnieje!');
+  
+  const user = await HrRecord.getOneByUserId(id);
+  if (user === null) {
+    throw new ValidationError('Użytkownik o takim id nie występuje w systemie.');
   }
-  const addUser = new UserRecord(user);
-  const tokenRegister = await addUser.insert();
-
-  if (!req.body.fullName || !req.body.company || !req.body.maxReservedStudents) {
-    throw new ValidationError('Nie podano wszystkich informacji!');
-  }
-
-  const hr = {
-    ...req.body,
-    user_id: addUser.id,
-    users_id_list: JSON.stringify([]),
-  };
-
-  const attachment = emailAttachment();
-
-  const addHr = new HrRecord(hr);
 
   try {
-    await addHr.insert();
-    const link = `http://localhost:3000/register/${addUser.id}/${tokenRegister}`;
-    const html = emailToHrRegister(addHr, link);
-    sendEmail(addHr.email, 'MegaK - HeadHunter#6', html, attachment);
+    await HrRecord.addImgById(id, img_src);
+    res.json('Zdjęcie poprawnie zapisane.');
   } catch (err) {
-    console.log(err);
+    throw new ValidationError('Błąd zapisywania zdjęcia w bazie danych.');
   }
-  res.json('Dodano HR do bazy danych.');
 });
