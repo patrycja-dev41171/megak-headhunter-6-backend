@@ -7,7 +7,7 @@ import rateLimiter from 'express-rate-limit';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { handleError } from './utils/handleErrors';
-import { uploadRouter } from './routers/admin.uploads.students';
+import {adminRouter} from './routers/admin.router';
 import { loginRouter } from './routers/login.router';
 import { refreshTokenRouter } from './routers/refreshToken.router';
 import { hrRouter } from './routers/hr.router';
@@ -18,6 +18,7 @@ import { studentBackRouter } from './routers/studentBackData';
 import { getStudentRouter } from './routers/getStudentImport';
 import { getStudentData } from './routers/getStudentData';
 import fileUpload = require('express-fileupload');
+import { envRouter } from './routers/env.router';
 
 const app = express();
 
@@ -49,13 +50,16 @@ app.use(morgan('common'));
 
 //routers
 
-app.use('/admin/upload/students', uploadRouter);
-app.use('/admin/add-hr', hrRouter);
+app.use('/admin', adminRouter);
+app.use('/hr', hrRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/refresh-token', refreshTokenRouter);
 app.use('/forgot-password', forgotPasswordRouter);
 app.use('/change-password', changePasswordRouter);
+app.use('/studentBack', studentBackRouter);
+app.use('/student', getStudentRouter);
+app.use('/env', envRouter);
 app.use('/student/data', studentBackRouter); // zapisywanie  dokładnych danych o studencie w bazie danych !
 app.use('/student/import', getStudentRouter); // wyświetlanie jedynie danych z importu dla studenta.
 app.use('/oneStudent/', getStudentData); // wysyłanie wszystkich danych o jednym studencie na FE.

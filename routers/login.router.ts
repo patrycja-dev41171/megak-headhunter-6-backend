@@ -8,7 +8,7 @@ export const loginRouter = Router()
   .post('/', async (req, res) => {
     const { email, password } = req.body;
     const user = await UserRecord.getOneByEmail(email);
-    if (!user) {
+    if (user === null) {
       throw new ValidationError('Niepoprawne dane logowania!');
     }
     if (user.registerToken !== null) {
@@ -41,7 +41,7 @@ export const loginRouter = Router()
           role: user.role,
         });
     } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie' + ' pózniej.');
+      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie pózniej.')
     }
   })
 
