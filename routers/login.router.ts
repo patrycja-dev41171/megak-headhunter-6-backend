@@ -3,6 +3,8 @@ import { UserRecord } from '../records/user.record';
 import { ValidationError } from '../utils/handleErrors';
 import { LoginRecord } from '../records/login.record';
 import { isPasswordCorrect } from '../utils/bcrypt-functions';
+import { StudentRecord } from '../records/student.record';
+import { Status } from '../types';
 
 export const loginRouter = Router()
   .post('/', async (req, res) => {
@@ -16,6 +18,15 @@ export const loginRouter = Router()
     }
     if (req.cookies.refreshToken !== undefined && (await LoginRecord.getOneByToken(req.cookies.refreshToken))) {
       throw new ValidationError('Użytkownik jest już zalogowany!');
+    }
+    if (user.role === 'student') {
+      const student = await StudentRecord.getOneById(user.id);
+      if (student === null) {
+        throw new ValidationError('Brak danych o kursancie.');
+      }
+      if (student.status === Status.Hired) {
+        throw new ValidationError('Brak dostępu do aplikacji. Skontaktuj się z administracją.');
+      }
     }
 
     const isCorrect = isPasswordCorrect(password, user.password);
@@ -41,7 +52,7 @@ export const loginRouter = Router()
           role: user.role,
         });
     } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie pózniej.')
+      throw new ValidationError('Wystąpił błąd podczas logowania użytkownika! Spróbuj ponownie pózniej.');
     }
   })
 

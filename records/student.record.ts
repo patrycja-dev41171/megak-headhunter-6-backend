@@ -89,18 +89,18 @@ export class StudentRecord implements StudentEntity {
     if (
       obj.expectedTypeWork !== undefined &&
       obj.expectedTypeWork !== null &&
-      !Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork)
+      !(Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork))
     ) {
       throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (
       obj.expectedContractType !== undefined &&
       obj.expectedContractType !== null &&
-      !Object.values(ExpectedContractType).includes(obj.expectedContractType)
+      !(Object.values(ExpectedContractType).includes(obj.expectedContractType))
     ) {
       throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
-    if (obj.status !== undefined && obj.status !== null && !Object.values(Status).includes(obj.status)) {
+    if (obj.status !== undefined && obj.status !== null && !(Object.values(Status).includes(obj.status))) {
       throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
@@ -186,5 +186,19 @@ export class StudentRecord implements StudentEntity {
       email,
     })) as StudentRecordResult;
     return results.length === 0 ? null : new StudentRecord(results[0]);
+  }
+
+  static async getOneById(id: string): Promise<StudentEntity> {
+    const [results] = (await pool.execute('SELECT * FROM `student` WHERE `user_id` = :user_id', {
+      user_id: id,
+    })) as StudentRecordResult;
+    return results.length === 0 ? null : new StudentRecord(results[0]);
+  }
+
+  static async updateStatusById(id: string, status: string) {
+    await pool.execute('UPDATE `student` SET `status` = :status WHERE `user_id` = :user_id', {
+      user_id: id,
+      status: status,
+    });
   }
 }

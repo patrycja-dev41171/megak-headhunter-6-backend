@@ -19,6 +19,7 @@ import { getStudentRouter } from './routers/getStudentImport';
 import { getStudentData } from './routers/getStudentData';
 import fileUpload = require('express-fileupload');
 import { envRouter } from './routers/env.router';
+import {studentRouter} from "./routers/student.router";
 
 const app = express();
 
@@ -58,7 +59,7 @@ app.use('/refresh-token', refreshTokenRouter);
 app.use('/forgot-password', forgotPasswordRouter);
 app.use('/change-password', changePasswordRouter);
 app.use('/studentBack', studentBackRouter);
-app.use('/student', getStudentRouter);
+app.use('/student', studentRouter);
 app.use('/env', envRouter);
 app.use('/student/data', studentBackRouter); // zapisywanie  dokładnych danych o studencie w bazie danych !
 app.use('/student/import', getStudentRouter); // wyświetlanie jedynie danych z importu dla studenta.
