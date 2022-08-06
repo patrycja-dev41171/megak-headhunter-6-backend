@@ -38,6 +38,10 @@ export interface SingleStudentImport {
   bonusProjectUrls: string;
 }
 
+export interface StudentId {
+  id: string;
+}
+
 export interface StudentEntityImport {
   id: string;
   email: string;
@@ -75,9 +79,17 @@ export interface studentEntityFront {
   reservedTo: Date | null;
 }
 
+export interface projectUrlMapEntity {
+  value: string;
+}
+
+export interface portfolioUrlMapEntity {
+  value: string;
+}
+
 export interface StudentEntity {
   id?: string;
-  email: string;
+  email?: string;
   courseCompletion?: number;
   courseEngagement?: number;
   projectDegree?: number;

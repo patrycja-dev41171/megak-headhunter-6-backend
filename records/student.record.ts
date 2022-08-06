@@ -8,7 +8,7 @@ type StudentRecordResult = [StudentEntityImport[], FieldPacket[]];
 
 export class StudentRecord implements StudentEntity {
   id?: string;
-  email: string;
+  email?: string;
   courseCompletion?: number;
   courseEngagement?: number;
   projectDegree?: number;
@@ -36,10 +36,10 @@ export class StudentRecord implements StudentEntity {
   reservedTo?: Date;
 
   constructor(obj: StudentEntity) {
-    if (!obj.email || obj.email.length > 255) {
+    if (obj.email !== undefined && obj.email !== null && (!obj.email || obj.email.length > 255)) {
       throw new ValidationError('Pole Email nie może być puste oraz zawierać więcej niż 255 znaków!');
     }
-    if (typeof obj.email !== 'string') {
+    if (obj.email !== undefined && obj.email !== null && typeof obj.email !== 'string') {
       throw new ValidationError('Format danych pola: E-mail jest nieprawidłowy!');
     }
     if (!obj.courseCompletion || obj.courseCompletion > 5 || obj.courseCompletion < 0) {
@@ -159,11 +159,12 @@ export class StudentRecord implements StudentEntity {
     )) as StudentRecordResult;
   }
 
-  async update(): Promise<void> {
+  async updateUserId(): Promise<void> {
     await pool.execute(
-      'UPDATE `student` SET `tel` = :tel, `lastName` = :lastName, `firstName` = :firstName, `githubUserName` = :githubUserName, `portfolioUrls` = :portfolioUrls, `projectUrls` = :projectUrls, `bio` = :bio, `expectedTypeWork` = :expectedTypeWork, `targetWorkCity` = :targetWorkCity, `expectedContractType` = :expectedContractType, `expectedSalary` = :expectedSalary, `canTakeApprenticeship` = :canTakeApprenticeship, `monthsOfCommercialExp` = :monthsOfCommercialExp, `education` = :education, `workExperience` = :workExperience, `courses` = :courses ,`status` = :status  WHERE `email` = :email',
+      'UPDATE `student` SET `tel` = :tel, `lastName` = :lastName, `firstName` = :firstName, `githubUserName` = :githubUserName, `portfolioUrls` = :portfolioUrls, `projectUrls` = :projectUrls, `bio` = :bio, `expectedTypeWork` = :expectedTypeWork, `targetWorkCity` = :targetWorkCity, `expectedContractType` = :expectedContractType, `expectedSalary` = :expectedSalary, `canTakeApprenticeship` = :canTakeApprenticeship, `monthsOfCommercialExp` = :monthsOfCommercialExp, `education` = :education, `workExperience` = :workExperience, `courses` = :courses ,`status` = :status , `email` = :email  WHERE `user_id` = :user_id',
       {
         id: this.id,
+        user_id: this.user_id,
         tel: this.tel,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -198,6 +199,13 @@ export class StudentRecord implements StudentEntity {
       user_id: id,
     })) as StudentRecordResult;
     return results.length === 0 ? null : new StudentRecord(results[0]);
+  }
+
+  static async updateEmail(email: string, user_id: string): Promise<void> {
+    await pool.execute('UPDATE `student` SET `email` = :email WHERE `user_id` = :user_id', {
+      user_id,
+      email,
+    });
   }
 
   static async updateStatusById(id: string, status: string, reservedTo: Date | null, hr_id: string | null) {

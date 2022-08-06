@@ -72,6 +72,13 @@ export class UserRecord implements UserEntity {
     });
   }
 
+  static async updateEmail(email: string, id: string): Promise<void> {
+    await pool.execute('UPDATE `user` SET `email` = :email WHERE `id` = :id', {
+      id,
+      email,
+    });
+  }
+
   static async updateOneRegister(password: string, id: string, registerToken: string | null): Promise<void> {
     await pool.execute('UPDATE`user`SET`password`=:password, `registerToken`= :registerToken WHERE`id`=:id', {
       password: password,

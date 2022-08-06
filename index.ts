@@ -7,7 +7,7 @@ import rateLimiter from 'express-rate-limit';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { handleError } from './utils/handleErrors';
-import {adminRouter} from './routers/admin.router';
+import { adminRouter } from './routers/admin.router';
 import { loginRouter } from './routers/login.router';
 import { refreshTokenRouter } from './routers/refreshToken.router';
 import { hrRouter } from './routers/hr.router';
@@ -17,9 +17,9 @@ import { registerRouter } from './routers/register.router';
 import { studentBackRouter } from './routers/studentBackData';
 import { getStudentRouter } from './routers/getStudentImport';
 import { getStudentData } from './routers/getStudentData';
-import fileUpload = require('express-fileupload');
 import { envRouter } from './routers/env.router';
-import {studentRouter} from "./routers/student.router";
+import { studentRouter } from './routers/student.router';
+import fileUpload = require('express-fileupload');
 
 const app = express();
 
