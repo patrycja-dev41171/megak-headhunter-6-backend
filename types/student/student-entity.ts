@@ -72,6 +72,7 @@ export interface studentEntityFront {
   workExperience: string | null;
   courses: string | null;
   status: Status | null;
+  reservedTo: Date | null;
 }
 
 export interface StudentEntity {
@@ -101,4 +102,5 @@ export interface StudentEntity {
   status?: Status | null;
   user_id?: string | null;
   hr_id?: string | null;
+  reservedTo?: Date | null;
 }
