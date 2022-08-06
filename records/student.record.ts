@@ -33,6 +33,7 @@ export class StudentRecord implements StudentEntity {
   status?: Status;
   user_id: string;
   hr_id?: string;
+  reservedTo?: Date;
 
   constructor(obj: StudentEntity) {
     if (obj.email !== undefined && obj.email !== null && (!obj.email || obj.email.length > 255)) {
@@ -106,6 +107,9 @@ export class StudentRecord implements StudentEntity {
     if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
       throw new ValidationError('Pole Miesięczne doświadczenie komercyjne musi być większe od 0!');
     }
+    if (obj.reservedTo !== undefined && obj.reservedTo !== null && !Object.values(Status).includes(obj.status)) {
+      throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
+    }
 
     this.id = obj.id ?? null;
     this.email = obj.email ?? null;
@@ -133,6 +137,7 @@ export class StudentRecord implements StudentEntity {
     this.status = obj.status ?? null;
     this.user_id = obj.user_id ?? null;
     this.hr_id = obj.hr_id ?? null;
+    this.reservedTo = obj.reservedTo ?? null;
   }
 
   async insert(): Promise<void> {
@@ -203,10 +208,12 @@ export class StudentRecord implements StudentEntity {
     });
   }
 
-  static async updateStatusById(id: string, status: string) {
-    await pool.execute('UPDATE `student` SET `status` = :status WHERE `user_id` = :user_id', {
+  static async updateStatusById(id: string, status: string, reservedTo: Date | null, hr_id: string | null) {
+    await pool.execute('UPDATE `student` SET `status` = :status, `reservedTo` =:reservedTo,`hr_id` = :hr_id WHERE `user_id` = :user_id', {
       user_id: id,
       status: status,
+      reservedTo: reservedTo,
+      hr_id: hr_id,
     });
   }
 }
