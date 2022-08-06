@@ -33,6 +33,7 @@ export class StudentRecord implements StudentEntity {
   status?: Status;
   user_id: string;
   hr_id?: string;
+  reservedTo?: Date;
 
   constructor(obj: StudentEntity) {
     if (!obj.email || obj.email.length > 255) {
@@ -89,22 +90,25 @@ export class StudentRecord implements StudentEntity {
     if (
       obj.expectedTypeWork !== undefined &&
       obj.expectedTypeWork !== null &&
-      !(Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork))
+      !Object.values(ExpectedTypeWork).includes(obj.expectedTypeWork)
     ) {
       throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (
       obj.expectedContractType !== undefined &&
       obj.expectedContractType !== null &&
-      !(Object.values(ExpectedContractType).includes(obj.expectedContractType))
+      !Object.values(ExpectedContractType).includes(obj.expectedContractType)
     ) {
       throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
-    if (obj.status !== undefined && obj.status !== null && !(Object.values(Status).includes(obj.status))) {
+    if (obj.status !== undefined && obj.status !== null && !Object.values(Status).includes(obj.status)) {
       throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
     if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
       throw new ValidationError('Pole Miesięczne doświadczenie komercyjne musi być większe od 0!');
+    }
+    if (obj.reservedTo !== undefined && obj.reservedTo !== null && !Object.values(Status).includes(obj.status)) {
+      throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
     }
 
     this.id = obj.id ?? null;
@@ -133,6 +137,7 @@ export class StudentRecord implements StudentEntity {
     this.status = obj.status ?? null;
     this.user_id = obj.user_id ?? null;
     this.hr_id = obj.hr_id ?? null;
+    this.reservedTo = obj.reservedTo ?? null;
   }
 
   async insert(): Promise<void> {
@@ -195,10 +200,12 @@ export class StudentRecord implements StudentEntity {
     return results.length === 0 ? null : new StudentRecord(results[0]);
   }
 
-  static async updateStatusById(id: string, status: string) {
-    await pool.execute('UPDATE `student` SET `status` = :status WHERE `user_id` = :user_id', {
+  static async updateStatusById(id: string, status: string, reservedTo: Date | null, hr_id: string | null) {
+    await pool.execute('UPDATE `student` SET `status` = :status, `reservedTo` =:reservedTo,`hr_id` = :hr_id WHERE `user_id` = :user_id', {
       user_id: id,
       status: status,
+      reservedTo: reservedTo,
+      hr_id: hr_id,
     });
   }
 }
