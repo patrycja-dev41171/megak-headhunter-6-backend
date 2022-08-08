@@ -15,7 +15,7 @@ studentBackRouter.post('/:userId', async (req, res) => {
     firstName,
     lastName,
     githubUserName,
-    portfolioURLS: portfolioUrls,
+    portfolioUrls,
     projectUrls,
     bio,
     expectedTypeWork,

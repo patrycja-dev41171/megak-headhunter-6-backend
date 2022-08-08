@@ -14,7 +14,6 @@ hrRouter.get('/:userId', async (req, res) => {
 
 hrRouter.post('/set/photo', async (req, res) => {
   const { id, img_src } = req.body;
-  console.log(id, img_src);
   if (!id || !img_src) {
     throw new ValidationError('Brak odpowiednich danych.');
   }
