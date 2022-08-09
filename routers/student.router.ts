@@ -28,19 +28,24 @@ studentRouter.post('/status', async (req, res) => {
   }
 
   if (status === Status.Reserved) {
+    const today = new Date();
+    const reservedTo = new Date();
+    reservedTo.setDate(today.getDate() + 10);
+    await StudentRecord.updateStatusById(id, status, reservedTo, hr_id);
+    const newArr: string[] = JSON.parse(userHr.users_id_list);
+
+    const include = newArr.includes(id);
+    if (include) {
+      throw new ValidationError('Zarezerwowałeś już tego kursanta.');
+    }
+
+    if (newArr.length === userHr.maxReservedStudents) {
+      throw new ValidationError('Nie możesz zarezerwować kursanta. Nie masz już wolnych miejsc na liście.');
+    }
+
+    newArr.push(id);
+
     try {
-      const today = new Date();
-      const reservedTo = new Date();
-      reservedTo.setDate(today.getDate() + 10);
-      await StudentRecord.updateStatusById(id, status, reservedTo, hr_id);
-      const newArr: string[] = JSON.parse(userHr.users_id_list);
-
-      const include = newArr.includes(id);
-      if (include) {
-        throw new ValidationError('Zarezerwowałeś już tego kursanta.');
-      }
-
-      newArr.push(id);
       await HrRecord.updateUsersIdList(hr_id, newArr);
       res.json(`Zmieniono status kursanta na: ${status}.`);
     } catch (err) {
