@@ -45,6 +45,24 @@ export interface StudentGetAll {
   monthsOfCommercialExp: number;
 }
 
+export interface SelectedStudents {
+  user_id: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  firstName: string;
+  lastName: string;
+  expectedTypeWork: ExpectedTypeWork;
+  targetWorkCity: string | null;
+  expectedContractType: ExpectedContractType;
+  expectedSalary: number | null;
+  canTakeApprenticeship: number;
+  monthsOfCommercialExp: number;
+  githubUsername: string;
+  reservedTo: Date;
+}
+
 export interface SingleStudentImport {
   email: string;
   courseCompletion: number;
