@@ -1,10 +1,11 @@
-import { ExpectedContractType, ExpectedTypeWork, Status, StudentEntity, StudentEntityImport } from '../types';
+import { ExpectedContractType, ExpectedTypeWork, Status, StudentEntity, StudentEntityImport, StudentGetAll } from '../types';
 import { ValidationError } from '../utils/handleErrors';
 import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
 import { pool } from '../utils/db';
 
 type StudentRecordResult = [StudentEntityImport[], FieldPacket[]];
+type StudentGetList = [StudentGetAll[], FieldPacket[]];
 
 export class StudentRecord implements StudentEntity {
   id?: string;
@@ -215,5 +216,12 @@ export class StudentRecord implements StudentEntity {
       reservedTo: reservedTo,
       hr_id: hr_id,
     });
+  }
+
+  static async getAllByStatus(): Promise<StudentGetAll[]> {
+    const [results] = (await pool.execute(
+      'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE `status` ="Dostępny" '
+    )) as StudentGetList;
+    return results.length === 0 ? null : results;
   }
 }
