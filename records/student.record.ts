@@ -1,4 +1,12 @@
-import { ExpectedContractType, ExpectedTypeWork, Status, StudentEntity, StudentEntityImport, StudentGetAll } from '../types';
+import {
+  ExpectedContractType,
+  ExpectedTypeWork,
+  SelectedStudents,
+  Status,
+  StudentEntity,
+  StudentEntityImport,
+  StudentGetAll,
+} from '../types';
 import { ValidationError } from '../utils/handleErrors';
 import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
@@ -6,6 +14,7 @@ import { pool } from '../utils/db';
 
 type StudentRecordResult = [StudentEntityImport[], FieldPacket[]];
 type StudentGetList = [StudentGetAll[], FieldPacket[]];
+type SelectedStudentsList = [SelectedStudents[], FieldPacket[]];
 
 export class StudentRecord implements StudentEntity {
   id?: string;
@@ -222,6 +231,17 @@ export class StudentRecord implements StudentEntity {
     const [results] = (await pool.execute(
       'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE `status` ="Dostępny" '
     )) as StudentGetList;
+    return results.length === 0 ? null : results;
+  }
+
+  static async getSelectedStudents(hr_id: string): Promise<SelectedStudents[]> {
+    const [results] = (await pool.execute(
+      'SELECT' +
+        ' `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp`,`student`.`githubUsername`,`student`.`reservedTo` FROM `student` WHERE `hr_id` = :hr_id',
+      {
+        hr_id: hr_id,
+      }
+    )) as SelectedStudentsList;
     return results.length === 0 ? null : results;
   }
 }
