@@ -121,6 +121,26 @@ export interface portfolioUrlMapEntity {
   value: string;
 }
 
+export interface studentMapFilterTypeWork {
+  id: string;
+  value: string;
+}
+
+export interface getAllFilter {
+  user_id: string;
+  firstName?: string;
+  lastName?: string;
+  courseCompletion: number;
+  courseEngagement: number;
+  projectDegree: number;
+  teamProjectDegree: number;
+  expectedTypeWork?: ExpectedTypeWork;
+  expectedContractType?: ExpectedContractType;
+  canTakeApprenticeship?: number;
+  monthsOfCommercialExp?: number;
+  expectedSalary?: number;
+}
+
 export interface StudentEntity {
   id?: string;
   email?: string;
