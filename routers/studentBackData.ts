@@ -9,6 +9,7 @@ const fetch = require('node-fetch');
 export const studentBackRouter = Router();
 
 studentBackRouter.post('/:userId', async (req, res) => {
+  console.log(req.body)
   const {
     email,
     tel,
@@ -48,7 +49,7 @@ studentBackRouter.post('/:userId', async (req, res) => {
   let studentData: StudentEntity;
   if (!email) {
     studentData = {
-      tel: tel,
+      tel: !tel? null : tel,
       firstName: firstName,
       lastName: lastName,
       githubUserName: githubUserName,
@@ -71,7 +72,7 @@ studentBackRouter.post('/:userId', async (req, res) => {
 
     studentData = {
       email: email,
-      tel: tel,
+      tel: !tel? null : tel,
       firstName: firstName,
       lastName: lastName,
       githubUserName: githubUserName,
