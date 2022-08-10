@@ -3,7 +3,7 @@ import { HrRecord } from '../records/hr.record';
 import { ValidationError } from '../utils/handleErrors';
 import { StudentRecord } from '../records/student.record';
 import { pool } from '../utils/db';
-import { StudentGetAll, studentMapFilterTypeContract, studentMapFilterTypeWork } from '../types';
+import { StudentGetAll, studentMapFilterTypeWork } from '../types';
 import { FieldPacket } from 'mysql2';
 
 type getAllFilter = [StudentGetAll[], FieldPacket[]];
@@ -35,7 +35,7 @@ hrRouter
     } = req.body;
 
     const typesWork = expectedTypeWork ? expectedTypeWork.map((el: studentMapFilterTypeWork) => el.value) : null;
-    const typesContract = expectedContractType ? expectedContractType.map((el: studentMapFilterTypeContract) => el.value) : null;
+    const typesContract = expectedContractType ? expectedContractType.map((el: studentMapFilterTypeWork) => el.value) : null;
 
     if (courseCompletion) {
       querySql += ' AND `courseCompletion` >= ' + Number(courseCompletion);
@@ -95,7 +95,7 @@ hrRouter
     const data = result.length === 0 ? null : result;
 
     if (!data) {
-      throw new ValidationError('Nie znaleziono wedlug kryteria wyszukiwania!');
+      throw new ValidationError('Nie znaleziono wedlug kryteriów wyszukiwania!');
     }
 
     res.status(200).json(data);
