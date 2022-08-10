@@ -103,6 +103,21 @@ export interface portfolioUrlMapEntity {
   value: string;
 }
 
+export interface studentMapFilter {
+  id: string;
+  value: string;
+}
+
+export interface studentMapFilterTypeWork {
+  id: string;
+  value: string;
+}
+
+export interface studentMapFilterTypeContract {
+  id: string;
+  value: string;
+}
+
 export interface StudentEntity {
   id?: string;
   email?: string;

@@ -59,7 +59,7 @@ studentBackRouter.post('/:userId', async (req, res) => {
       targetWorkCity: targetWorkCity,
       expectedContractType: expectedContractType,
       expectedSalary: expectedSalary,
-      canTakeApprenticeship: Number(canTakeApprenticeship),
+      canTakeApprenticeship: parseInt(canTakeApprenticeship),
       monthsOfCommercialExp: monthsOfCommercialExp,
       education: education,
       workExperience: workExperience,
@@ -107,10 +107,8 @@ studentBackRouter.post('/:userId', async (req, res) => {
 
   if (!data.message) {
     await studentFront.updateUserId();
-    studentData = {};
     res.status(200).json('Zaktualizowano dane.');
   } else {
-    studentData = {};
     throw new ValidationError(
       `Użytkownik o takim  loginie:  ${studentFront.githubUserName} nie posiada konta na github! Sprawdź login i spróbuj ponownie.`
     );
