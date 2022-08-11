@@ -15,7 +15,6 @@ export enum ExpectedContractType {
 
 export enum Status {
   Available = 'Dostępny',
-  Reserved = 'W trakcie rozmowy',
   Hired = 'Zatrudniony',
 }
 
@@ -60,7 +59,6 @@ export interface SelectedStudents {
   canTakeApprenticeship: number;
   monthsOfCommercialExp: number;
   githubUsername: string;
-  reservedTo: Date;
 }
 
 export interface SingleStudentImport {
@@ -110,7 +108,6 @@ export interface studentEntityFront {
   workExperience: string | null;
   courses: string | null;
   status: Status | null;
-  reservedTo: Date | null;
 }
 
 export interface projectUrlMapEntity {
@@ -167,6 +164,4 @@ export interface StudentEntity {
   courses?: string | null;
   status?: Status | null;
   user_id?: string | null;
-  hr_id?: string | null;
-  reservedTo?: Date | null;
 }

@@ -3,69 +3,85 @@ import { StudentRecord } from '../records/student.record';
 import { ValidationError } from '../utils/handleErrors';
 import { Status } from '../types';
 import { HrRecord } from '../records/hr.record';
+import { HrStudentRecord } from '../records/hr_student.record';
+import { user } from 'firebase-functions/lib/providers/auth';
 
 export const studentRouter = Router();
 
-studentRouter.post('/status', async (req, res) => {
-  const { id, status, hr_id } = req.body;
-  if (!id && !status) {
-    throw new ValidationError('Nieprawidłowe dane z FE.');
+studentRouter.post('/hired', async (req, res) => {
+  const { user_id } = req.body;
+  if (!user_id) {
+    throw new ValidationError('Brak wymaganych danych.');
   }
-
-  if (!Object.values(Status).includes(status)) {
-    throw new ValidationError('Nieprawidłowa nazwa statusu.');
+  try {
+    await StudentRecord.updateStatus(user_id);
+    await HrStudentRecord.deleteManyByStudentId(user_id);
+    res.json('Zmieniono status kursanta.');
+  } catch (err) {
+    throw new ValidationError(`Wystąpił błąd podczas zminay statusu na ${Status.Hired}. Spróbuj ponownie.`);
   }
+});
 
-  const userStudent = await StudentRecord.getOneById(id);
+studentRouter
+  .post('/reserved', async (req, res) => {
+    const { student_id, hr_id } = req.body;
+    if (!student_id && !hr_id) {
+      throw new ValidationError('Brak wymaganych danych.');
+    }
+    const hr = await HrRecord.getOneByUserId(hr_id);
+    if (hr === null) {
+      throw new ValidationError('Nie możesz dokonać rezerwacji, nieprawidłowe dane. Skontaktuj się z administracją.');
+    }
 
-  if (userStudent === null) {
-    throw new ValidationError(`Brak w bazie kursanta o id: ${id}.`);
-  }
+    const student = await StudentRecord.getOneById(student_id);
+    if (student === null) {
+      throw new ValidationError('Nie możesz dokonać rezerwacji, nieprawidłowe dane. Skontaktuj się z administracją.');
+    }
 
-  const userHr = await HrRecord.getOneByUserId(hr_id);
-  if (userHr === null) {
-    throw new ValidationError(`Brak w bazie hr o id: ${hr_id}. Skontaktuj się z administracja.`);
-  }
+    const result = await HrStudentRecord.getOneByHrIdAndStudentId(hr_id, student_id);
 
-  if (status === Status.Reserved) {
+    if (result !== null) {
+      throw new ValidationError('Zarezerwowałeś już tego uzytkownika!');
+    }
+
+    const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
+    if (reservedStudents !== null) {
+      if (hr.maxReservedStudents <= reservedStudents.length) {
+        throw new ValidationError('Nie możesz zarezerwować więcej użytkowników!');
+      }
+    }
+
     const today = new Date();
     const reservedTo = new Date();
     reservedTo.setDate(today.getDate() + 10);
-    await StudentRecord.updateStatusById(id, status, reservedTo, hr_id);
-    const newArr: string[] = JSON.parse(userHr.users_id_list);
-
-    const include = newArr.includes(id);
-    if (include) {
-      throw new ValidationError('Zarezerwowałeś już tego kursanta.');
-    }
-
-    if (newArr.length === userHr.maxReservedStudents) {
-      throw new ValidationError('Nie możesz zarezerwować kursanta. Nie masz już wolnych miejsc na liście.');
-    }
-
-    newArr.push(id);
 
     try {
-      await HrRecord.updateUsersIdList(hr_id, newArr);
-      res.json(`Zmieniono status kursanta na: ${status}.`);
+      const reservation = new HrStudentRecord({
+        hr_id,
+        student_id,
+        reservedTo: reservedTo,
+      });
+
+      await reservation.insertOne();
+
+      res.json('Zarezerwowano kursanta.');
     } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas zmiany statusu studenta w bazie danych.');
+      throw new ValidationError(`Wystąpił błąd podczas zminay statusu na ${Status.Hired}. Spróbuj ponownie.`);
     }
-  }
+  })
 
-  if (status !== Status.Reserved) {
-    try {
-      let newArr: string[] = JSON.parse(userHr.users_id_list);
-      const include = newArr.includes(id);
-      if (include) {
-        newArr = newArr.filter(e => e !== `${id}`);
-        await HrRecord.updateUsersIdList(hr_id, newArr);
+  .post('/cancel/reservation', async (req, res) => {
+      const {student_id, hr_id} = req.body;
+
+      const reservation = await HrStudentRecord.getOneByHrIdAndStudentId(hr_id, student_id);
+      if(reservation === null) {
+          throw new ValidationError("Bład. Brak takiej rezerwacji w bazie danych.")
       }
-      const reservedTo: Date = null;
-      await StudentRecord.updateStatusById(id, status, reservedTo, null);
-      res.json(`Zmieniono status kursanta na: ${status}.`);
-    } catch (err) {
-      throw new ValidationError('Wystąpił błąd podczas zmiany statusu studenta w bazie danych.');
-    }
-  }
-});
+
+      try {
+          await HrStudentRecord.deleteOneById(reservation.id)
+          res.json("Zrezygnowałeś z danego kursanta.")
+      } catch (err){
+       throw new ValidationError("Wystąpił błąd podczas rezygnacji z kursanta.")
+      }
+  });

@@ -1,12 +1,4 @@
-import {
-  ExpectedContractType,
-  ExpectedTypeWork,
-  SelectedStudents,
-  Status,
-  StudentEntity,
-  StudentEntityImport,
-  StudentGetAll,
-} from '../types';
+import { ExpectedContractType, ExpectedTypeWork, Status, StudentEntity, StudentEntityImport, StudentGetAll } from '../types';
 import { ValidationError } from '../utils/handleErrors';
 import { v4 as uuid } from 'uuid';
 import { FieldPacket } from 'mysql2';
@@ -14,7 +6,6 @@ import { pool } from '../utils/db';
 
 type StudentRecordResult = [StudentEntityImport[], FieldPacket[]];
 type StudentGetList = [StudentGetAll[], FieldPacket[]];
-type SelectedStudentsList = [SelectedStudents[], FieldPacket[]];
 
 export class StudentRecord implements StudentEntity {
   id?: string;
@@ -42,8 +33,6 @@ export class StudentRecord implements StudentEntity {
   courses?: string;
   status?: Status;
   user_id: string;
-  hr_id?: string;
-  reservedTo?: Date;
 
   constructor(obj: StudentEntity) {
     if (obj.email !== undefined && obj.email !== null && (!obj.email || obj.email.length > 255)) {
@@ -117,9 +106,6 @@ export class StudentRecord implements StudentEntity {
     if (obj.monthsOfCommercialExp !== undefined && obj.monthsOfCommercialExp !== null && obj.monthsOfCommercialExp < 0) {
       throw new ValidationError('Pole Miesięczne doświadczenie komercyjne musi być większe od 0!');
     }
-    if (obj.reservedTo !== undefined && obj.reservedTo !== null && !Object.values(Status).includes(obj.status)) {
-      throw new ValidationError('Oczekiwana wartość jest niepoprawna!');
-    }
 
     this.id = obj.id ?? null;
     this.email = obj.email ?? null;
@@ -146,8 +132,6 @@ export class StudentRecord implements StudentEntity {
     this.courses = obj.courses ?? null;
     this.status = obj.status ?? null;
     this.user_id = obj.user_id ?? null;
-    this.hr_id = obj.hr_id ?? null;
-    this.reservedTo = obj.reservedTo ?? null;
   }
 
   async insert(): Promise<void> {
@@ -155,7 +139,10 @@ export class StudentRecord implements StudentEntity {
       this.id = uuid();
     }
     const [results] = (await pool.execute(
-      'INSERT INTO `student` (`id`, `email`,`courseCompletion`, `courseEngagement`, `projectDegree`, `teamProjectDegree`, `bonusProjectUrls`,`user_id`) VALUES (:id,:email, :courseCompletion, :courseEngagement, :projectDegree, :teamProjectDegree, :bonusProjectUrls, :user_id)',
+      'INSERT INTO `student` (`id`, `email`,`courseCompletion`, `courseEngagement`,' +
+        ' `projectDegree`, `teamProjectDegree`, `bonusProjectUrls`,`user_id`, `status`) VALUES' +
+        ' (:id,:email, :courseCompletion, :courseEngagement, :projectDegree, :teamProjectDegree,' +
+        ' :bonusProjectUrls, :user_id, :status)',
       {
         id: this.id,
         email: this.email,
@@ -165,6 +152,7 @@ export class StudentRecord implements StudentEntity {
         teamProjectDegree: this.projectDegree,
         bonusProjectUrls: this.bonusProjectUrls,
         user_id: this.user_id,
+        status: Status.Available,
       }
     )) as StudentRecordResult;
   }
@@ -197,34 +185,11 @@ export class StudentRecord implements StudentEntity {
     );
   }
 
-  static async getOneByEmail(email: string): Promise<StudentEntity> {
-    const [results] = (await pool.execute('SELECT * FROM `student` WHERE `email` = :email', {
-      email,
-    })) as StudentRecordResult;
-    return results.length === 0 ? null : new StudentRecord(results[0]);
-  }
-
   static async getOneById(id: string): Promise<StudentEntity> {
     const [results] = (await pool.execute('SELECT * FROM `student` WHERE `user_id` = :user_id', {
       user_id: id,
     })) as StudentRecordResult;
     return results.length === 0 ? null : new StudentRecord(results[0]);
-  }
-
-  static async updateEmail(email: string, user_id: string): Promise<void> {
-    await pool.execute('UPDATE `student` SET `email` = :email WHERE `user_id` = :user_id', {
-      user_id,
-      email,
-    });
-  }
-
-  static async updateStatusById(id: string, status: string, reservedTo: Date | null, hr_id: string | null) {
-    await pool.execute('UPDATE `student` SET `status` = :status, `reservedTo` =:reservedTo,`hr_id` = :hr_id WHERE `user_id` = :user_id', {
-      user_id: id,
-      status: status,
-      reservedTo: reservedTo,
-      hr_id: hr_id,
-    });
   }
 
   static async getAllByStatus(): Promise<StudentGetAll[]> {
@@ -234,14 +199,10 @@ export class StudentRecord implements StudentEntity {
     return results.length === 0 ? null : results;
   }
 
-  static async getSelectedStudents(hr_id: string): Promise<SelectedStudents[]> {
-    const [results] = (await pool.execute(
-      'SELECT' +
-        ' `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp`,`student`.`githubUsername`,`student`.`reservedTo` FROM `student` WHERE `hr_id` = :hr_id',
-      {
-        hr_id: hr_id,
-      }
-    )) as SelectedStudentsList;
-    return results.length === 0 ? null : results;
+  static async updateStatus(user_id: string): Promise<void> {
+    await pool.execute('UPDATE `student` SET `status` = :status WHERE `user_id` = :user_id', {
+      user_id,
+      status: Status.Hired,
+    });
   }
 }

@@ -20,7 +20,6 @@ getStudentData.get('/:userId', async (req, res) => {
   )) as SignleStudentAllData;
 
   const data = result.length === 0 ? null : result[0];
-
   if (!data) {
     throw new ValidationError('Nie znaleziono danych o kursancie !');
   }

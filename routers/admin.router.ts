@@ -114,7 +114,6 @@ adminRouter
     const hr = {
       ...req.body,
       user_id: addUser.id,
-      users_id_list: JSON.stringify([]),
     };
 
     const attachment = emailAttachment();
