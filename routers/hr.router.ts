@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { HrRecord } from '../records/hr.record';
 import { ValidationError } from '../utils/handleErrors';
 import { StudentRecord } from '../records/student.record';
-import { getAllFilter, HrFrontEntity, Status, studentMapFilterTypeWork } from '../types';
+import { getAllFilter, HrFrontEntity } from '../types';
 import { pool } from '../utils/db';
 import { FieldPacket } from 'mysql2';
 import { HrStudentRecord } from '../records/hr_student.record';
@@ -48,9 +48,6 @@ hrRouter
       monthsOfCommercialExp,
     } = req.body;
 
-    const typesWork = expectedTypeWork ? expectedTypeWork.map((el: studentMapFilterTypeWork) => el.value) : null;
-    const typesContract = expectedContractType ? expectedContractType.map((el: studentMapFilterTypeWork) => el.value) : null;
-
     if (courseCompletion) {
       querySql += ' AND `courseCompletion` >= ' + Number(courseCompletion);
     }
@@ -70,7 +67,7 @@ hrRouter
     if (expectedTypeWork) {
       querySql += '  AND (';
 
-      for (const typeWork of typesWork) {
+      for (const typeWork of expectedTypeWork) {
         querySql += ' `expectedTypeWork` = ' + `"${typeWork}"  OR`;
       }
 
@@ -81,15 +78,14 @@ hrRouter
     if (expectedContractType) {
       querySql += '  AND (';
 
-      for (const typeContract of typesContract) {
+      for (const typeContract of expectedContractType) {
         querySql += ' `expectedContractType` = ' + `"${typeContract}"  OR`;
       }
 
       querySql = querySql.slice(0, -2);
       querySql += ')';
     }
-    //
-    if (minSalary) {
+    if (minSalary && minSalary !== 0) {
       querySql += ' AND `expectedSalary` >= ' + Number(minSalary);
     }
 
