@@ -64,7 +64,7 @@ hrRouter
       querySql += ' AND `teamProjectDegree` >= ' + Number(teamProjectDegree);
     }
 
-    if (expectedTypeWork) {
+    if (expectedTypeWork && expectedTypeWork.length !== 0) {
       querySql += '  AND (';
 
       for (const typeWork of expectedTypeWork) {
@@ -74,8 +74,7 @@ hrRouter
       querySql = querySql.slice(0, -2);
       querySql += ')';
     }
-    //
-    if (expectedContractType) {
+    if (expectedContractType && expectedContractType.length !== 0) {
       querySql += '  AND (';
 
       for (const typeContract of expectedContractType) {
@@ -85,7 +84,7 @@ hrRouter
       querySql = querySql.slice(0, -2);
       querySql += ')';
     }
-    if (minSalary && minSalary !== 0) {
+    if (minSalary) {
       querySql += ' AND `expectedSalary` >= ' + Number(minSalary);
     }
 
