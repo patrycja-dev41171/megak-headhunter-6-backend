@@ -13,7 +13,6 @@ export class HrRecord implements HrEntity {
   fullName: string;
   company: string;
   maxReservedStudents: number;
-  users_id_list?: string | null;
   img_src: null | string;
 
   constructor(obj: HrEntity) {
@@ -51,29 +50,16 @@ export class HrRecord implements HrEntity {
     this.email = obj.email;
     this.company = obj.company;
     this.maxReservedStudents = obj.maxReservedStudents;
-    this.users_id_list = obj.users_id_list ?? null;
     this.img_src = obj.img_src ?? null;
   }
 
   async insert(): Promise<void> {
-    try {
       await pool.execute(
         'INSERT INTO `hr` (`id`, `user_id`,`fullName`,`email`, `company`, `maxReservedStudents`,' +
-          ' `users_id_list`, `img_src`)' +
-          ' VALUES (:id, :user_id , :fullName, :email, :company, :maxReservedStudents,' +
-          ' :users_id_list, :img_src)',
+          ' `img_src`)' +
+          ' VALUES (:id, :user_id , :fullName, :email, :company, :maxReservedStudents,:img_src)',
         this
       );
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  static async getOneByEmail(email: string): Promise<HrEntity> {
-    const [results] = (await pool.execute('SELECT * FROM `hr` WHERE `email` = :email', {
-      email,
-    })) as HrRecordResult;
-    return results.length === 0 ? null : new HrRecord(results[0]);
   }
 
   static async getOneByUserId(user_id: string): Promise<HrEntity> {
@@ -87,14 +73,6 @@ export class HrRecord implements HrEntity {
     await pool.execute('UPDATE `hr` SET `img_src` = :img_src WHERE `user_id` = :id', {
       id: id,
       img_src: img_src,
-    });
-  }
-
-  static async updateUsersIdList(id: string, users_id_list: string[]): Promise<void> {
-    const array = JSON.stringify(users_id_list);
-    await pool.execute('UPDATE `hr` SET `users_id_list` = :users_id_list WHERE `user_id` = :id', {
-      id: id,
-      users_id_list: array,
     });
   }
 }

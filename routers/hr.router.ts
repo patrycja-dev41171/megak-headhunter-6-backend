@@ -2,9 +2,10 @@ import { Router } from 'express';
 import { HrRecord } from '../records/hr.record';
 import { ValidationError } from '../utils/handleErrors';
 import { StudentRecord } from '../records/student.record';
-import { getAllFilter, Status, studentMapFilterTypeWork } from '../types';
+import { getAllFilter, HrFrontEntity, Status, studentMapFilterTypeWork } from '../types';
 import { pool } from '../utils/db';
 import { FieldPacket } from 'mysql2';
+import { HrStudentRecord } from '../records/hr_student.record';
 
 type typesData = [getAllFilter[], FieldPacket[]];
 
@@ -12,15 +13,28 @@ export const hrRouter = Router();
 
 hrRouter
   .get('/:userId', async (req, res) => {
-    const hrFind = await HrRecord.getOneByUserId(req.params.userId);
+    const hr_id = req.params.userId;
+    const hrFind = await HrRecord.getOneByUserId(hr_id);
     if (!hrFind) {
       throw new ValidationError('Nie zlokalizowano danego HR w bazie danych!');
     }
-    res.status(200).json(hrFind);
+
+    const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
+    let reservedStudentNum: number;
+    if (reservedStudents === null) {
+      reservedStudentNum = 0;
+    } else reservedStudentNum = reservedStudents.length;
+
+    const hr = {
+      ...hrFind,
+      reservedStudents: reservedStudentNum,
+    } as HrFrontEntity;
+
+    res.status(200).json(hr);
   })
   .post('/home/filterList', async (req, res) => {
     let querySql =
-      'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE (`status` = "Dostępny" OR `status` = "W trakcie rozmowy")';
+      'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE (`status` = "Dostępny")';
     const {
       courseCompletion,
       courseEngagement,
@@ -91,7 +105,6 @@ hrRouter
       querySql += ' AND `monthsOfCommercialExp` >= ' + Number(monthsOfCommercialExp);
     }
 
-    console.log(querySql);
     const [result] = (await pool.execute(querySql)) as typesData;
     const data = result.length === 0 ? null : result;
 
@@ -118,7 +131,7 @@ hrRouter
 
     const user = await HrRecord.getOneByUserId(id);
     if (user === null) {
-      throw new ValidationError('Użytkownik o takim id nie występuje w systemie.');
+      throw new ValidationError(`Użytkownik o takim id: ${id} nie występuje w systemie.`);
     }
 
     try {
@@ -132,9 +145,9 @@ hrRouter
   .get('/selected/students', async (req, res) => {
     const { hr_id } = req.body;
 
-    const students = await StudentRecord.getSelectedStudents(hr_id);
-    if (students === null) {
-      throw new ValidationError('Nie masz zarezerwowanych kursantów.');
+    const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
+    if (reservedStudents === null) {
+      res.json(reservedStudents);
     }
 
     const hr = await HrRecord.getOneByUserId(hr_id);
@@ -142,26 +155,36 @@ hrRouter
       throw new ValidationError('Problem z twoim identyfikatorem. Skontaktuj się z administracją.');
     }
 
-    for (const student of students) {
+    for (const reservedStudent of reservedStudents) {
       const today = new Date();
-      if (student.reservedTo < today) {
+      if (reservedStudent.reservedTo < today) {
         try {
-          let newArr: string[] = JSON.parse(hr.users_id_list);
-          const include = newArr.includes(student.user_id);
-          if (include) {
-            newArr = newArr.filter(e => e !== `${student.user_id}`);
-            await HrRecord.updateUsersIdList(hr_id, newArr);
-          }
-          await StudentRecord.updateStatusById(student.user_id, Status.Available, null, null);
+          await HrStudentRecord.deleteOneById(reservedStudent.id);
         } catch (err) {
-          throw new ValidationError('Wystąpił błąd podczas zmiany statusu kursanta w bazie danych.');
+          throw new ValidationError(`Problem z automatycznym usunięciem użytkownika z listy zarezerwowanych przez Hr o id: ${hr_id}`);
         }
       }
     }
 
     try {
-      const studentsFE = await StudentRecord.getSelectedStudents(hr_id);
-      res.json(studentsFE);
+      const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
+      if (reservedStudents === null) {
+        res.json(reservedStudents);
+      } else {
+        let selectedStudents = [];
+
+        for (const reservedStudent of reservedStudents) {
+          const student = await StudentRecord.getOneById(reservedStudent.student_id);
+          const reservedTo = reservedStudent.reservedTo;
+          const SelectedStudent = {
+            ...student,
+            reservedTo,
+          };
+          selectedStudents.push(SelectedStudent);
+        }
+
+        res.json(selectedStudents);
+      }
     } catch (err) {
       throw new ValidationError('Problem z pobraniem listy zarezerwowanych kursantów.');
     }

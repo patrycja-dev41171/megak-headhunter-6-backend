@@ -9,7 +9,6 @@ const fetch = require('node-fetch');
 export const studentBackRouter = Router();
 
 studentBackRouter.post('/:userId', async (req, res) => {
-  console.log(req.body)
   const {
     email,
     tel,
@@ -95,7 +94,7 @@ studentBackRouter.post('/:userId', async (req, res) => {
   const studentDb = await StudentRecord.getOneById(req.params.userId);
 
   if (!studentDb) {
-    throw new ValidationError('Nie możesz zaktualizować swoich danych ponieważ twoje konto jest nieaktywne lub nie istnieję !');
+    throw new ValidationError('Nie możesz zaktualizować swoich danych ponieważ twoje konto jest nieaktywne lub nie istnieję!');
   }
 
   const response = await fetch(`https://api.github.com/users/${githubUserName}`);
