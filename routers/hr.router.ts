@@ -2,12 +2,10 @@ import { Router } from 'express';
 import { HrRecord } from '../records/hr.record';
 import { ValidationError } from '../utils/handleErrors';
 import { StudentRecord } from '../records/student.record';
-import { getAllFilter, HrFrontEntity } from '../types';
-import { pool } from '../utils/db';
-import { FieldPacket } from 'mysql2';
+import { FilterReqBody, FilterReqBodyDataId, HrFrontEntity } from '../types';
 import { HrStudentRecord } from '../records/hr_student.record';
-
-type typesData = [getAllFilter[], FieldPacket[]];
+import { FilterByHrId } from '../utils/filter/decoratorFilterUserId';
+import { Filter } from '../utils/filter/decoratorFilter';
 
 export const hrRouter = Router();
 
@@ -32,82 +30,13 @@ hrRouter
 
     res.status(200).json(hr);
   })
+
   .post('/home/filterList', async (req, res) => {
-    let querySql =
-      'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE (`status` = "Dostępny")';
-    const {
-      courseCompletion,
-      courseEngagement,
-      projectDegree,
-      teamProjectDegree,
-      expectedTypeWork,
-      expectedContractType,
-      minSalary,
-      maxSalary,
-      canTakeApprenticeship,
-      monthsOfCommercialExp,
-    } = req.body;
+    res.status(200).json(await Filter(req.body as FilterReqBody));
+  })
 
-    if (courseCompletion) {
-      querySql += ' AND `courseCompletion` >= ' + Number(courseCompletion);
-    }
-
-    if (courseEngagement) {
-      querySql += ' AND `courseEngagement` >= ' + Number(courseEngagement);
-    }
-
-    if (projectDegree) {
-      querySql += ' AND `projectDegree` >= ' + Number(projectDegree);
-    }
-
-    if (teamProjectDegree) {
-      querySql += ' AND `teamProjectDegree` >= ' + Number(teamProjectDegree);
-    }
-
-    if (expectedTypeWork && expectedTypeWork.length !== 0) {
-      querySql += '  AND (';
-
-      for (const typeWork of expectedTypeWork) {
-        querySql += ' `expectedTypeWork` = ' + `"${typeWork}"  OR`;
-      }
-
-      querySql = querySql.slice(0, -2);
-      querySql += ')';
-    }
-    if (expectedContractType && expectedContractType.length !== 0) {
-      querySql += '  AND (';
-
-      for (const typeContract of expectedContractType) {
-        querySql += ' `expectedContractType` = ' + `"${typeContract}"  OR`;
-      }
-
-      querySql = querySql.slice(0, -2);
-      querySql += ')';
-    }
-    if (minSalary) {
-      querySql += ' AND `expectedSalary` >= ' + Number(minSalary);
-    }
-
-    if (maxSalary) {
-      querySql += ' AND `expectedSalary` <= ' + Number(maxSalary);
-    }
-
-    if (canTakeApprenticeship) {
-      querySql += ' AND `canTakeApprenticeship` = ' + Number(canTakeApprenticeship);
-    }
-
-    if (monthsOfCommercialExp) {
-      querySql += ' AND `monthsOfCommercialExp` >= ' + Number(monthsOfCommercialExp);
-    }
-
-    const [result] = (await pool.execute(querySql)) as typesData;
-    const data = result.length === 0 ? null : result;
-
-    if (!data) {
-      throw new ValidationError('Nie znaleziono według kryteriów wyszukiwania!');
-    }
-
-    res.status(200).json(data);
+  .post('/home/selectedStudents/filterList', async (req, res) => {
+    res.status(200).json(await FilterByHrId(req.body as FilterReqBodyDataId));
   })
 
   .get('/home/getAll', async (req, res) => {

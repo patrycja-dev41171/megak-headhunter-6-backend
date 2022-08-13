@@ -70,6 +70,33 @@ export interface SingleStudentImport {
   bonusProjectUrls: string;
 }
 
+export interface FilterReqBodyDataId {
+  courseCompletion: number | null;
+  courseEngagement: number | null;
+  projectDegree: number | null;
+  teamProjectDegree: number | null;
+  expectedTypeWork: string[] | [];
+  expectedContractType: string[] | [];
+  minSalary: string;
+  maxSalary: string;
+  canTakeApprenticeship: string | null;
+  monthsOfCommercialExp: string | null;
+  hr_id: string;
+}
+
+export interface FilterReqBody {
+  courseCompletion: number | null;
+  courseEngagement: number | null;
+  projectDegree: number | null;
+  teamProjectDegree: number | null;
+  expectedTypeWork: string[] | [];
+  expectedContractType: string[] | [];
+  minSalary: string;
+  maxSalary: string;
+  canTakeApprenticeship: string | null;
+  monthsOfCommercialExp: string | null;
+}
+
 export interface StudentId {
   id: string;
 }

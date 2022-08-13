@@ -1,6 +1,6 @@
 import { ValidationError } from '../utils/handleErrors';
 import { v4 as uuid } from 'uuid';
-import { HrStudentEntity } from 'hr_student';
+import { HrStudentEntity } from '../types';
 import { pool } from '../utils/db';
 import { FieldPacket } from 'mysql2';
 
