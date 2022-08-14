@@ -1,10 +1,11 @@
 import { ValidationError } from '../utils/handleErrors';
 import { v4 as uuid } from 'uuid';
-import { HrStudentEntity } from '../types';
+import {HrStudentEntity, HrStudentIdEntity} from '../types';
 import { pool } from '../utils/db';
 import { FieldPacket } from 'mysql2';
 
 type HrStudentResults = [HrStudentEntity[], FieldPacket[]];
+type HrStudentID = [HrStudentIdEntity[], FieldPacket[]];
 
 export class HrStudentRecord implements HrStudentEntity {
   id?: string;
@@ -39,6 +40,18 @@ export class HrStudentRecord implements HrStudentEntity {
     })) as HrStudentResults;
     return results.length === 0 ? null : results.map(obj => new HrStudentRecord(obj));
   }
+
+
+  static async getAll(hrId:string): Promise<HrStudentIdEntity[]> {
+    const [results] = (await pool.execute('SELECT `hr_student`.`student_id` FROM `hr_student` where `hr_id` = :hrID ',{
+      hrID:hrId,
+    })) as HrStudentID;
+    return results.length === 0 ? null : results.map(obj => obj);
+  }
+
+
+
+
 
   static async getOneByHrIdAndStudentId(hr_id: string, student_id: string): Promise<HrStudentEntity> {
     const [results] = (await pool.execute('SELECT * FROM `hr_student` WHERE `hr_id` = :hr_id AND student_id = :student_id', {
