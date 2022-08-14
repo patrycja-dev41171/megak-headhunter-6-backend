@@ -45,10 +45,10 @@ studentRouter
     }
 
     const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
-    if (reservedStudents !== null) {
-      if (hr.maxReservedStudents <= reservedStudents.length) {
-        throw new ValidationError('Nie możesz zarezerwować więcej użytkowników!');
-      }
+    if(reservedStudents !== null){
+        if (hr.maxReservedStudents <= reservedStudents.length) {
+            throw new ValidationError('Nie możesz zarezerwować więcej użytkowników!');
+        }
     }
 
     const today = new Date();
@@ -71,17 +71,17 @@ studentRouter
   })
 
   .post('/cancel/reservation', async (req, res) => {
-      const {student_id, hr_id} = req.body;
+    const { student_id, hr_id } = req.body;
 
-      const reservation = await HrStudentRecord.getOneByHrIdAndStudentId(hr_id, student_id);
-      if(reservation === null) {
-          throw new ValidationError("Bład. Brak takiej rezerwacji w bazie danych.")
-      }
+    const reservation = await HrStudentRecord.getOneByHrIdAndStudentId(hr_id, student_id);
+    if (reservation === null) {
+      throw new ValidationError('Bład. Brak takiej rezerwacji w bazie danych.');
+    }
 
-      try {
-          await HrStudentRecord.deleteOneById(reservation.id)
-          res.json("Zrezygnowałeś z danego kursanta.")
-      } catch (err){
-       throw new ValidationError("Wystąpił błąd podczas rezygnacji z kursanta.")
-      }
+    try {
+      await HrStudentRecord.deleteOneById(reservation.id);
+      res.json('Zrezygnowałeś z danego kursanta.');
+    } catch (err) {
+      throw new ValidationError('Wystąpił błąd podczas rezygnacji z kursanta.');
+    }
   });

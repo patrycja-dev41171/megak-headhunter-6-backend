@@ -192,3 +192,7 @@ export interface StudentEntity {
   status?: Status | null;
   user_id?: string | null;
 }
+
+export interface StudentEntityFront extends StudentEntity {
+  reservedTo: Date;
+}
