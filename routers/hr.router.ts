@@ -41,7 +41,7 @@ hrRouter
 
   .get('/home/getAll', async (req, res) => {
     const allStudentsByStatusAvailable = await StudentRecord.getAllByStatus();
-    if (!allStudentsByStatusAvailable) {
+    if (allStudentsByStatusAvailable === null) {
       throw new ValidationError('Brak aktywnych kursantów w bazie!');
     }
     res.status(200).json(allStudentsByStatusAvailable);
