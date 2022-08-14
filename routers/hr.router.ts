@@ -66,12 +66,12 @@ hrRouter
     }
   })
 
-  .get('/selected/students', async (req, res) => {
-    const { hr_id } = req.body;
+  .get('/selected/students/:hr_id', async (req, res) => {
+    const { hr_id } = req.params;
 
     const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
     if (reservedStudents === null) {
-      res.json(reservedStudents);
+      throw new ValidationError('Brak zarezerwowanych studentów.');
     }
 
     const hr = await HrRecord.getOneByUserId(hr_id);
