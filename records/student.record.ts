@@ -197,6 +197,9 @@ export class StudentRecord implements StudentEntity {
       'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE `status` ="Dostępny" '
     )) as StudentGetList;
     return results.length === 0 ? null : results;
+
+
+
   }
 
   static async updateStatus(user_id: string): Promise<void> {
