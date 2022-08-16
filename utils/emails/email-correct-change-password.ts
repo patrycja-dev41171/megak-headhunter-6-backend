@@ -1,8 +1,8 @@
 import { emailsStyle } from './emails-style';
 
-export const emailCorrectChangePassword = (email:string) => {
-    const style = emailsStyle();
-    const html = `
+export const emailCorrectChangePassword = (email: string) => {
+  const style = emailsStyle();
+  const html = `
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -38,5 +38,5 @@ export const emailCorrectChangePassword = (email:string) => {
   </body>
 </html>
 </html>`;
-    return html;
+  return html;
 };

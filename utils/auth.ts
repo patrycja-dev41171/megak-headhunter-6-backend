@@ -11,7 +11,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
     const token = authHeader.split(' ')[1];
     await jwt.verify(token, process.env.ACCESS_TOKEN_KEY, (err, decoded) => {
       if (err) {
-        res.status(401);;
+        res.status(401);
       }
       next();
     });

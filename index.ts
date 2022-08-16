@@ -1,4 +1,3 @@
-import express from 'express';
 import 'express-async-errors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
@@ -6,6 +5,7 @@ import helmet from 'helmet';
 import rateLimiter from 'express-rate-limit';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import express, { Router } from 'express';
 import { handleError } from './utils/handleErrors';
 import { adminRouter } from './routers/admin.router';
 import { loginRouter } from './routers/login.router';
@@ -23,6 +23,7 @@ import fileUpload = require('express-fileupload');
 import { auth } from './utils/auth';
 
 const app = express();
+const router = Router();
 
 dotenv.config({ path: '.env' });
 
@@ -51,21 +52,21 @@ app.use(
 app.use(morgan('common'));
 
 //routers
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
-app.use('/refresh-token', refreshTokenRouter);
-app.use('/forgot-password', forgotPasswordRouter);
-app.use('/change-password', changePasswordRouter);
+router.use('/login', loginRouter);
+router.use('/register', registerRouter);
+router.use('/refresh-token', refreshTokenRouter);
+router.use('/forgot-password', forgotPasswordRouter);
+router.use('/change-password', changePasswordRouter);
+router.use('/admin', auth, adminRouter);
+router.use('/hr', auth, hrRouter);
+router.use('/studentBack', auth, studentBackRouter);
+router.use('/student', auth, studentRouter);
+router.use('/env', auth, envRouter);
+router.use('/student/data', auth, studentBackRouter);
+router.use('/student/import', auth, getStudentRouter);
+router.use('/oneStudent/', auth, getStudentData);
 
-app.use(auth)
-app.use('/admin', adminRouter);
-app.use('/hr', hrRouter);
-app.use('/studentBack', studentBackRouter);
-app.use('/student', studentRouter);
-app.use('/env', envRouter);
-app.use('/student/data', studentBackRouter); // zapisywanie  dokładnych danych o studencie w bazie danych !
-app.use('/student/import', getStudentRouter); // wyświetlanie jedynie danych z importu dla studenta.
-app.use('/oneStudent/', getStudentData); // wysyłanie wszystkich danych o jednym studencie na FE.
+app.use('/api', router);
 
 app.use(handleError);
 
