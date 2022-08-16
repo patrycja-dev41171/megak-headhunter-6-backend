@@ -20,6 +20,7 @@ import { getStudentData } from './routers/getStudentData';
 import { envRouter } from './routers/env.router';
 import { studentRouter } from './routers/student.router';
 import fileUpload = require('express-fileupload');
+import { auth } from './utils/auth';
 
 const app = express();
 
@@ -50,14 +51,15 @@ app.use(
 app.use(morgan('common'));
 
 //routers
-
-app.use('/admin', adminRouter);
-app.use('/hr', hrRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/refresh-token', refreshTokenRouter);
 app.use('/forgot-password', forgotPasswordRouter);
 app.use('/change-password', changePasswordRouter);
+
+app.use(auth)
+app.use('/admin', adminRouter);
+app.use('/hr', hrRouter);
 app.use('/studentBack', studentBackRouter);
 app.use('/student', studentRouter);
 app.use('/env', envRouter);

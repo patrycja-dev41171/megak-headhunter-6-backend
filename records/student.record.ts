@@ -152,7 +152,7 @@ export class StudentRecord implements StudentEntity {
         teamProjectDegree: this.projectDegree,
         bonusProjectUrls: this.bonusProjectUrls,
         user_id: this.user_id,
-        status: Status.Available,
+        status: null,
       }
     )) as StudentRecordResult;
   }
@@ -179,7 +179,7 @@ export class StudentRecord implements StudentEntity {
         education: this.education,
         workExperience: this.workExperience,
         courses: this.courses,
-        status: this.status,
+        status: Status.Available,
         email: this.email,
       }
     );
@@ -190,16 +190,6 @@ export class StudentRecord implements StudentEntity {
       user_id: id,
     })) as StudentRecordResult;
     return results.length === 0 ? null : new StudentRecord(results[0]);
-  }
-
-  static async getAllByStatus(): Promise<StudentGetAll[]> {
-    const [results] = (await pool.execute(
-      'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE `status` ="Dostępny" '
-    )) as StudentGetList;
-    return results.length === 0 ? null : results;
-
-
-
   }
 
   static async updateStatus(user_id: string): Promise<void> {

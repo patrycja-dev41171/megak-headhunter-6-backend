@@ -194,5 +194,6 @@ export interface StudentEntity {
 }
 
 export interface StudentEntityFront extends StudentEntity {
+  firstName:string;
   reservedTo: Date;
 }
