@@ -2,20 +2,11 @@ import { Router } from 'express';
 import { HrRecord } from '../records/hr.record';
 import { ValidationError } from '../utils/handleErrors';
 import { StudentRecord } from '../records/student.record';
-import {
-  FilterReqBody,
-  FilterReqBodyDataId,
-  getAllFilter,
-  HrFrontEntity,
-  HrStudentIdEntity,
-  StudentGetAll
-} from '../types';
+import { FilterReqBody, FilterReqBodyDataId, getAllFilter, HrFrontEntity, HrStudentIdEntity, StudentGetAll } from '../types';
 import { HrStudentRecord } from '../records/hr_student.record';
 import { FilterByHrId } from '../utils/filter/decoratorFilterUserId';
 import { Filter } from '../utils/filter/decoratorFilter';
-import {pool} from "../utils/db";
-import {FieldPacket} from "mysql2";
-import {GetAll} from "../utils/filter/decoratorGetAll";
+import { GetAll } from '../utils/filter/decoratorGetAll';
 
 export const hrRouter = Router();
 
@@ -42,7 +33,7 @@ hrRouter
   })
 
   .post('/home/filterList/:hrID', async (req, res) => {
-    res.status(200).json(await Filter((req.body as FilterReqBody),req.params.hrID));
+    res.status(200).json(await Filter(req.body as FilterReqBody, req.params.hrID));
   })
 
   .post('/home/selectedStudents/filterList', async (req, res) => {
