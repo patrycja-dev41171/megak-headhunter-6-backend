@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 import 'express-async-errors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
@@ -22,6 +22,7 @@ import { studentRouter } from './routers/student.router';
 import fileUpload = require('express-fileupload');
 
 const app = express();
+const router = Router();
 
 dotenv.config({ path: '.env' });
 
@@ -51,19 +52,21 @@ app.use(morgan('common'));
 
 //routers
 
-app.use('/admin', adminRouter);
-app.use('/hr', hrRouter);
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
-app.use('/refresh-token', refreshTokenRouter);
-app.use('/forgot-password', forgotPasswordRouter);
-app.use('/change-password', changePasswordRouter);
-app.use('/studentBack', studentBackRouter);
-app.use('/student', studentRouter);
-app.use('/env', envRouter);
-app.use('/student/data', studentBackRouter); // zapisywanie  dokładnych danych o studencie w bazie danych !
-app.use('/student/import', getStudentRouter); // wyświetlanie jedynie danych z importu dla studenta.
-app.use('/oneStudent/', getStudentData); // wysyłanie wszystkich danych o jednym studencie na FE.
+router.use('/admin', adminRouter);
+router.use('/hr', hrRouter);
+router.use('/login', loginRouter);
+router.use('/register', registerRouter);
+router.use('/refresh-token', refreshTokenRouter);
+router.use('/forgot-password', forgotPasswordRouter);
+router.use('/change-password', changePasswordRouter);
+router.use('/studentBack', studentBackRouter);
+router.use('/student', studentRouter);
+router.use('/env', envRouter);
+router.use('/student/data', studentBackRouter); // zapisywanie  dokładnych danych o studencie w bazie danych !
+router.use('/student/import', getStudentRouter); // wyświetlanie jedynie danych z importu dla studenta.
+router.use('/oneStudent/', getStudentData); // wysyłanie wszystkich danych o jednym studencie na FE.
+
+app.use('/api', router);
 
 app.use(handleError);
 

@@ -53,6 +53,7 @@ hrRouter
     res.status(200).json(await GetAll(req.params.hrId));
   })
 
+
   .post('/set/photo', async (req, res) => {
     const { id, img_src } = req.body;
     if (!id || !img_src) {
