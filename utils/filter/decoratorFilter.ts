@@ -1,9 +1,10 @@
-import { FilterReqBody, getAllFilter } from '../../types';
+import {FilterReqBody, getAllFilter, HrStudentIdEntity} from '../../types';
 import { FieldPacket } from 'mysql2';
 import { pool } from '../db';
 import { ValidationError } from '../handleErrors';
+import {HrStudentRecord} from "../../records/hr_student.record";
 
-export async function Filter(enterData: FilterReqBody) {
+export async function Filter(enterData: FilterReqBody, hrID :string) {
   type typesData = [getAllFilter[], FieldPacket[]];
   const {
     courseCompletion,
@@ -18,9 +19,23 @@ export async function Filter(enterData: FilterReqBody) {
     monthsOfCommercialExp,
   } = enterData;
 
+  if(!hrID){
+    throw new ValidationError("Nie można znaleść listy dla twojego konta !");
+  }
   let querySql =
-    'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE (`status` = "Dostępny")';
+    'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp` FROM `student` WHERE `status` = "Dostępny" ';
 
+  const hrStudents = await HrStudentRecord.getAll(hrID);
+
+  if (hrStudents) {
+    const filterMap = hrStudents.map((el:HrStudentIdEntity)=> el.student_id);
+    querySql += '  AND (';
+    for (const singleId of filterMap) {
+      querySql += ' `student`.`user_id` != ' + `"${singleId}"  AND`;
+    }
+    querySql = querySql.slice(0, -3);
+    querySql += ')';
+  }
   if (courseCompletion) {
     querySql += ' AND `courseCompletion` >= ' + Number(courseCompletion);
   }

@@ -2,10 +2,20 @@ import { Router } from 'express';
 import { HrRecord } from '../records/hr.record';
 import { ValidationError } from '../utils/handleErrors';
 import { StudentRecord } from '../records/student.record';
-import { FilterReqBody, FilterReqBodyDataId, HrFrontEntity } from '../types';
+import {
+  FilterReqBody,
+  FilterReqBodyDataId,
+  getAllFilter,
+  HrFrontEntity,
+  HrStudentIdEntity,
+  StudentGetAll
+} from '../types';
 import { HrStudentRecord } from '../records/hr_student.record';
 import { FilterByHrId } from '../utils/filter/decoratorFilterUserId';
 import { Filter } from '../utils/filter/decoratorFilter';
+import {pool} from "../utils/db";
+import {FieldPacket} from "mysql2";
+import {GetAll} from "../utils/filter/decoratorGetAll";
 
 export const hrRouter = Router();
 
@@ -31,21 +41,18 @@ hrRouter
     res.status(200).json(hr);
   })
 
-  .post('/home/filterList', async (req, res) => {
-    res.status(200).json(await Filter(req.body as FilterReqBody));
+  .post('/home/filterList/:hrID', async (req, res) => {
+    res.status(200).json(await Filter((req.body as FilterReqBody),req.params.hrID));
   })
 
   .post('/home/selectedStudents/filterList', async (req, res) => {
     res.status(200).json(await FilterByHrId(req.body as FilterReqBodyDataId));
   })
 
-  .get('/home/getAll', async (req, res) => {
-    const allStudentsByStatusAvailable = await StudentRecord.getAllByStatus();
-    if (allStudentsByStatusAvailable === null) {
-      throw new ValidationError('Brak aktywnych kursantów w bazie!');
-    }
-    res.status(200).json(allStudentsByStatusAvailable);
+  .get('/home/getAll/:hrId', async (req, res) => {
+    res.status(200).json(await GetAll(req.params.hrId));
   })
+
 
   .post('/set/photo', async (req, res) => {
     const { id, img_src } = req.body;

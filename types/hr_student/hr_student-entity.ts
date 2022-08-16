@@ -4,3 +4,9 @@ export interface HrStudentEntity {
   student_id: string;
   reservedTo: Date;
 }
+
+export interface HrStudentIdEntity {
+
+  student_id:string;
+
+}

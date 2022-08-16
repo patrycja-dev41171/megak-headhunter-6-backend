@@ -29,20 +29,30 @@ The application was developed for 4 weeks in a 6-person team of novice programme
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/in/kamil-stangret/" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660399196/MegaK/NicePng_linkedin-icon-png_99356_lcdscx.png" alt="kamil-stangret" height="25" width="100" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto: kamilstangret@wp.pl" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660400374/MegaK/Daco_4064141_jagvmw.png" alt="kamil-stangret" height="22" width="35" /></a></p>
 
 - [@LukaszAmbrozewski](https://github.com/LukaszAmbrozewski)<br/>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660399196/MegaK/NicePng_linkedin-icon-png_99356_lcdscx.png" alt="Łukasz-Ambrożewski" height="25" width="100" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto: " target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660400374/MegaK/Daco_4064141_jagvmw.png" alt="Łukasz-Ambrożewski" height="22" width="35" /></a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/in/%C5%82ukasz-ambro%C5%BCewski-943a01222" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660399196/MegaK/NicePng_linkedin-icon-png_99356_lcdscx.png" alt="Łukasz-Ambrożewski" height="25" width="100" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto: lukaszambrozewski@gmail.com" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660400374/MegaK/Daco_4064141_jagvmw.png" alt="Łukasz-Ambrożewski" height="22" width="35" /></a></p>
 
 - [@PawelZurawka](https://github.com/PawelZurawka)<br/>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660399196/MegaK/NicePng_linkedin-icon-png_99356_lcdscx.png" alt="Paweł-Żurawka" height="25" width="100" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto: " target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660400374/MegaK/Daco_4064141_jagvmw.png" alt="Paweł-Żurawka" height="22" width="35" /></a></p>
-
-## Demo ❗❗
-
-Demo link:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/in/pawel-zurawka/" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660399196/MegaK/NicePng_linkedin-icon-png_99356_lcdscx.png" alt="Paweł-Żurawka" height="25" width="100" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto: pzurawka@gmail.com" target="blank"><img align="center" src="https://res.cloudinary.com/headhunter/image/upload/v1660400374/MegaK/Daco_4064141_jagvmw.png" alt="Paweł-Żurawka" height="22" width="35" /></a></p>
 
 ## Documentation
 
 <img src="https://raw.githubusercontent.com/csmoore/country-flag-icons/8f7c50904bb7080b8aef99c3fa836305117bcbc1/country-flags-4x3-svg/pl.svg" alt="mysql" width="15" height="15"/>&nbsp;&nbsp; [Documentation](https://linktodocumentation)
 
 ## Screenshots 📷
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580314/MegaK/Login1View_uesuc3.png" alt="Login View" width="600" height="300"/>
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580318/MegaK/AdminPanel2View_jzpbff.png" alt="Admin View" width="600" height="300"/>
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580320/MegaK/Student2View_if4i6a.png" alt="Student View" width="600" height="300"/>
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580316/MegaK/HrHomeView_czupiv.png" alt="HR Home View" width="600" height="300"/>
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580315/MegaK/HrSelectedStudentsView_hbwrjg.png" alt="HR Selected Students View" width="600" height="300"/>
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580318/MegaK/HrStudentCvView_gzdooz.png" alt="HR Student CV View" width="600" height="700"/>
+
+<img src="https://res.cloudinary.com/headhunter/image/upload/v1660580314/MegaK/HrProfileView_hxqpoc.png" alt="HR Account View" width="600" height="300"/>
 
 ## Lessons Learned 🌳
 <p>Working on the project allowed us to get to know how the work of programmers looks in reality. Working in the Scrum team prepared us for the first internship or work as a programmer.</p>
