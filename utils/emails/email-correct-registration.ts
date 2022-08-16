@@ -1,4 +1,5 @@
 import { emailsStyle } from './emails-style';
+import xss from 'xss';
 
 export const emailCorrectRegistration = (email:string) => {
     const style = emailsStyle();
@@ -20,7 +21,7 @@ export const emailCorrectRegistration = (email:string) => {
           <table class="main">
                   <tbody>
                   <tr><td><h1>Poprawna rejestracja</h1></td></tr>
-                  <tr><td><p>Użytkowniku o emailu: ${email}</p></td></tr>
+                  <tr><td><p>Użytkowniku o emailu: ${xss(email)}</p></td></tr>
                   <tr><td><p>Zostałeś prawidłowo zarejestrowany w systemie: MegaK-HeadHunter.</p></td></tr>
                   <tr><td><p>Możesz zalogować się do strony w linku poniżej.</p></td></tr>
                   <tr><td><a href="http://localhost:3000/login" target="_blank">Zaloguj się</a></td></tr>

@@ -3,6 +3,7 @@ import { FieldPacket } from 'mysql2';
 import { pool } from '../db';
 import { ValidationError } from '../handleErrors';
 import {HrStudentRecord} from "../../records/hr_student.record";
+import {escape} from 'sqlstring';
 
 export async function Filter(enterData: FilterReqBody, hrID :string) {
   type typesData = [getAllFilter[], FieldPacket[]];
@@ -31,7 +32,7 @@ export async function Filter(enterData: FilterReqBody, hrID :string) {
     const filterMap = hrStudents.map((el:HrStudentIdEntity)=> el.student_id);
     querySql += '  AND (';
     for (const singleId of filterMap) {
-      querySql += ' `student`.`user_id` != ' + `"${singleId}"  AND`;
+      querySql += ' `student`.`user_id` != ' + `${escape(singleId)}  AND`;
     }
     querySql = querySql.slice(0, -3);
     querySql += ')';
@@ -56,7 +57,7 @@ export async function Filter(enterData: FilterReqBody, hrID :string) {
     querySql += '  AND (';
 
     for (const typeWork of expectedTypeWork) {
-      querySql += ' `expectedTypeWork` = ' + `"${typeWork}"  OR`;
+      querySql += ' `expectedTypeWork` = ' + `${escape(typeWork)}  OR`;
     }
 
     querySql = querySql.slice(0, -2);
@@ -66,7 +67,7 @@ export async function Filter(enterData: FilterReqBody, hrID :string) {
     querySql += '  AND (';
 
     for (const typeContract of expectedContractType) {
-      querySql += ' `expectedContractType` = ' + `"${typeContract}"  OR`;
+      querySql += ' `expectedContractType` = ' + `${escape(typeContract)}  OR`;
     }
 
     querySql = querySql.slice(0, -2);
