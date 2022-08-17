@@ -66,47 +66,47 @@ hrRouter
   .get('/selected/students/:hr_id', async (req, res) => {
     const { hr_id } = req.params;
 
-    const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
-    if (reservedStudents === null) {
-      throw new ValidationError('Brak zarezerwowanych studentów.');
-    }
-
     const hr = await HrRecord.getOneByUserId(hr_id);
     if (hr === null) {
       throw new ValidationError('Problem z twoim identyfikatorem. Skontaktuj się z administracją.');
     }
 
-    for (const reservedStudent of reservedStudents) {
-      const today = new Date();
-      if (reservedStudent.reservedTo < today) {
-        try {
-          await HrStudentRecord.deleteOneById(reservedStudent.id);
-        } catch (err) {
-          throw new ValidationError(`Problem z automatycznym usunięciem użytkownika z listy zarezerwowanych przez Hr o id: ${hr_id}`);
+    const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
+    if (reservedStudents === null) {
+      res.json(null);
+    } else {
+      for (const reservedStudent of reservedStudents) {
+        const today = new Date();
+        if (reservedStudent.reservedTo < today) {
+          try {
+            await HrStudentRecord.deleteOneById(reservedStudent.id);
+          } catch (err) {
+            throw new ValidationError(`Problem z automatycznym usunięciem użytkownika z listy zarezerwowanych przez Hr o id: ${hr_id}`);
+          }
         }
       }
-    }
 
-    try {
-      const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
-      if (reservedStudents === null) {
-        res.json(reservedStudents);
-      } else {
-        let selectedStudents = [];
+      try {
+        const reservedStudents = await HrStudentRecord.getAllByHrId(hr_id);
+        if (reservedStudents === null) {
+          res.json(reservedStudents);
+        } else {
+          let selectedStudents = [];
 
-        for (const reservedStudent of reservedStudents) {
-          const student = await StudentRecord.getOneById(reservedStudent.student_id);
-          const reservedTo = reservedStudent.reservedTo;
-          const SelectedStudent = {
-            ...student,
-            reservedTo,
-          };
-          selectedStudents.push(SelectedStudent);
+          for (const reservedStudent of reservedStudents) {
+            const student = await StudentRecord.getOneById(reservedStudent.student_id);
+            const reservedTo = reservedStudent.reservedTo;
+            const SelectedStudent = {
+              ...student,
+              reservedTo,
+            };
+            selectedStudents.push(SelectedStudent);
+          }
+
+          res.json(selectedStudents);
         }
-
-        res.json(selectedStudents);
+      } catch (err) {
+        throw new ValidationError('Problem z pobraniem listy zarezerwowanych kursantów.');
       }
-    } catch (err) {
-      throw new ValidationError('Problem z pobraniem listy zarezerwowanych kursantów.');
     }
   });
