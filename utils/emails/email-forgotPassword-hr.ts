@@ -1,5 +1,6 @@
 import { HrUserEntity } from '../../types';
 import { emailsStyle } from './emails-style';
+import xss from 'xss';
 
 export const emailToHr = (hr: HrUserEntity, link: string) => {
   const style = emailsStyle();
@@ -20,10 +21,10 @@ export const emailToHr = (hr: HrUserEntity, link: string) => {
         <div class="content">
           <table class="main">
                   <tbody>
-                  <tr><td><h1>Cześć ${hr.fullName}</h1></td></tr>
+                  <tr><td><h1>Cześć ${xss(hr.fullName)}</h1></td></tr>
                   <tr><td><p>Odebraliśmy od Ciebie prośbę o przypomnienie hasła.</p></td></tr>
                   <tr><td><p>Aby móc ponownie korzystać z systemu wpisz nowe hasło w poniższym linku.</p></td></tr>
-                  <tr><td><a href="http://localhost:3000/change-password/${hr.id}" target="_blank">Zmiana hasła</a></td></tr>
+                  <tr><td><a href="http://localhost:3000/change-password/${xss(hr.id)}" target="_blank">Zmiana hasła</a></td></tr>
                   <tr class="tr_img"><img src="cid:logo&background.png" alt="Logo MegaK"></tr>
                   <tr><td><p>Zignoruj tę wiadomość jeśli to nie ty wysyłałeś prośbę o przypomnienie hasła.</p></td></tr>
                   <tr><td><p class="p_strong">Pozdrawia zespół MegaK-HeadHunter#6.</p></td></tr>

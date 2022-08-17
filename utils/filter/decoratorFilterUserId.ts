@@ -2,6 +2,7 @@ import { pool } from '../db';
 import { ValidationError } from '../handleErrors';
 import { FilterReqBodyDataId, getAllFilter } from '../../types';
 import { FieldPacket } from 'mysql2';
+import {escape} from 'sqlstring';
 
 export async function FilterByHrId(enterData: FilterReqBodyDataId) {
   type typesData = [getAllFilter[], FieldPacket[]];
@@ -23,7 +24,7 @@ export async function FilterByHrId(enterData: FilterReqBodyDataId) {
     'SELECT `student`.`user_id`,`student`.`firstName`,`student`.`lastName`,`student`.`courseCompletion`,`student`.`courseEngagement`,`student`.`projectDegree`,`student`.`teamProjectDegree`,`student`.`expectedTypeWork`,`student`.`targetWorkCity`,`student`.`expectedContractType`,`student`.`expectedSalary`,`student`.`canTakeApprenticeship`,`student`.`monthsOfCommercialExp`, `hr_student`.`reservedTo` FROM `hr_student` INNER JOIN `student` on `hr_student`.`student_id` = `student`.`user_id` WHERE `hr_student`.`hr_id` =  ';
 
   if (hr_id) {
-    querySql += `"${hr_id}"`;
+    querySql += `${escape(hr_id)}`;
   }
 
   if (courseCompletion) {
@@ -46,7 +47,7 @@ export async function FilterByHrId(enterData: FilterReqBodyDataId) {
     querySql += '  AND (';
 
     for (const typeWork of expectedTypeWork) {
-      querySql += ' `expectedTypeWork` = ' + `"${typeWork}"  OR`;
+      querySql += ' `expectedTypeWork` = ' + `${escape(typeWork)}  OR`;
     }
 
     querySql = querySql.slice(0, -2);
@@ -56,7 +57,7 @@ export async function FilterByHrId(enterData: FilterReqBodyDataId) {
     querySql += '  AND (';
 
     for (const typeContract of expectedContractType) {
-      querySql += ' `expectedContractType` = ' + `"${typeContract}"  OR`;
+      querySql += ' `expectedContractType` = ' + `${escape(typeContract)}  OR`;
     }
 
     querySql = querySql.slice(0, -2);
