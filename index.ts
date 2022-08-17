@@ -44,7 +44,7 @@ app.use(
 app.use(
   rateLimiter({
     windowMs: 5 * 60 * 1000,
-    max: 100,
+    max: 500,
     standardHeaders: true,
     legacyHeaders: false,
   })
